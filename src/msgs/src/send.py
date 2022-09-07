@@ -14,7 +14,8 @@ class MinimalPublisher(Node):
         self.i = 0
 
     def timer_callback(self):
-        msg = ImuRaw()                                          
+        msg = ImuRaw()                     
+        msg.header.stamp = self.get_clock().now().to_msg()    
         msg.linear_acc = [0.1, 0.2, 0.3]                                     
         msg.rotational_acc = [0.1, 0.2, 0.2]                                     
         self.publisher_.publish(msg)
