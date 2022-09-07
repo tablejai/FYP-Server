@@ -9,34 +9,32 @@ source /path_to_this_workspace/install/setup.bash  ## adding custom ROS variable
 
 ## How to build
 
-#### C/C++
-If using c/c++
+### C/C++
+* build a package
+    ```sh 
+    colcon build --packages-select [package]
+    ```
 
-build a package
-```sh 
-colcon build --packages-select [package]
-```
+* build a package with its dependencies
+    ```sh 
+    colcon build --packages-up-to [package]
+    ```
 
-build a package with its dependencies
-```sh 
-colcon build --packages-up-to [package]
-```
+* build all packages under the workspace 
+    ```sh 
+    colcon build
+    ```
 
-build all packages under the workspace
-```sh 
-colcon build
-```
-
-#### Python
+### Python
 No need to colcon build if using Python
 
 ## How to run
-#### C/C++
+### C/C++
 ```sh 
 ros2 run [package] [executable]
 ```
 
-#### Python
+### Python
 ```sh 
 python3 src/[package]/src/[executable]
 ```
