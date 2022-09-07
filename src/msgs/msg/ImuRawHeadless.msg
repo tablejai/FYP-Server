@@ -1,4 +1,3 @@
-std_msgs/Header header
 float64 linear_acc_x
 float64 linear_acc_y
 float64 linear_acc_z

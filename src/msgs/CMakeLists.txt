@@ -35,11 +35,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(PROGRAMS
-  src/recv.py
-  src/send.py
-  DESTINATION lib)
-
 ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
