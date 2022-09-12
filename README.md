@@ -1,10 +1,12 @@
 # FYP ROS SYSTEM
 
-## How to launch ROS
+## How to setup ROS
 ```sh
-source /opt/ros/foxy/setup.bash     # adding ROS system variables, such as ros2 command line
+# adding ROS system variables, such as ros2 command line
+source /opt/ros/foxy/setup.bash     
 
-source /path_to_this_workspace/install/setup.bash  ## adding custom ROS variables and include files, such as msgs
+## adding custom ROS variables so that ros2 command line understand our packages, such as msgs, augmentor
+source /path_to_this_workspace/install/setup.bash  
 ```
 
 ## How to create package
@@ -21,8 +23,6 @@ ros2 pkg create --build-type ament_python [package]
 ref: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html
 
 ## How to build
-
-### C/C++
 * build a package
     ```sh 
     colcon build --packages-select [package]
@@ -38,8 +38,6 @@ ref: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-
     colcon build
     ```
 
-### Python
-No need to colcon build if using Python
 
 ## How to run
 ### C/C++
@@ -49,5 +47,7 @@ ros2 run [package] [executable]
 
 ### Python
 ```sh 
+ros2 run [package] [executable]
+# or
 python3 src/[package]/src/[executable]
 ```
