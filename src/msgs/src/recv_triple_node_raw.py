@@ -11,7 +11,7 @@ class MinimalSubscriber(Node):
         self.subscription = self.create_subscription(ImuRawArray, 'ImuRawArray', self.listener_callback, 10)
 
     def listener_callback(self, msg):
-        self.get_logger().info(f'I heard: [{msg.data[0].linear_acc_x}, {msg.data[0].linear_acc_y}, {msg.data[0].linear_acc_z}]' ) 
+        self.get_logger().info(f'Received: [{msg.data[0].linear_acc_x}, {msg.data[0].linear_acc_y}, {msg.data[0].linear_acc_z}]' ) 
 
 def main(args=None):
     rclpy.init(args=args)

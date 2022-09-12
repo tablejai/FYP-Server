@@ -22,8 +22,8 @@ class MinimalPublisher(Node):
         # publish
         self.publisher_.publish(msg)
 
-        # log and increment
-        self.get_logger().info(f'Publishing: [{msg.linear_acc_x}, {msg.linear_acc_y}, {msg.linear_acc_z}]') 
+        # log
+        self.get_logger().info(f"Publishing Pseudo Data @ {msg.header.stamp.sec+msg.header.stamp.nanosec / 10**9}") 
 
 def main(args=None):
     rclpy.init(args=args)
