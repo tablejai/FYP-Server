@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'augmentor = augmentor.augmentor:main',
+            'augment_launch = augmentor.augment_launch:main',
         ],
     },
 )
