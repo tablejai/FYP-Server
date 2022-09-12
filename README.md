@@ -7,6 +7,19 @@ source /opt/ros/foxy/setup.bash     # adding ROS system variables, such as ros2 
 source /path_to_this_workspace/install/setup.bash  ## adding custom ROS variables and include files, such as msgs
 ```
 
+## How to create package
+
+### C/C++
+```sh
+ros2 pkg create --build-type ament_cmake [package]
+```
+
+### Python
+```sh
+ros2 pkg create --build-type ament_python [package]
+````
+ref: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html
+
 ## How to build
 
 ### C/C++
