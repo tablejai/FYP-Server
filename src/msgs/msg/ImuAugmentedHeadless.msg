@@ -21,3 +21,8 @@ float64 linear_trans_z
 float64 rotational_trans_x
 float64 rotational_trans_y
 float64 rotational_trans_z
+
+float64 quaternion_x
+float64 quaternion_y
+float64 quaternion_z
+float64 quaternion_w
