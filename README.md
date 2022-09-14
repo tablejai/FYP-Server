@@ -9,7 +9,7 @@ source /opt/ros/foxy/setup.bash
 source /path_to_this_workspace/install/setup.bash  
 ```
 
-## How to create package
+## How to create a package
 
 ### C/C++
 ```sh
