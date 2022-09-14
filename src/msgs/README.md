@@ -1,5 +1,11 @@
 # MSGS
 
+## How to and compile install message
+```sh
+colcon build --packages-up-to augmentor
+source install/setup.bash
+```
+
 ### Publish pseudo data
 ```sh
 python3 src/msgs/send_single_node_raw.py # single pseudo IMU node

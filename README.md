@@ -20,7 +20,18 @@ ros2 pkg create --build-type ament_cmake [package]
 ```sh
 ros2 pkg create --build-type ament_python [package]
 ````
-ref: https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html
+
+More about creating and configuring the package
+1. Create your python code under [package]/[package]/[package.py]
+2. Add entry point to setup.py so that ros2 can locate its position
+```py
+'[package] = [package].[package]:main',
+```
+
+Links:
+
+* [Create a Python package](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html)
+* [Entry Point For Python](https://docs.ros.org/en/foxy/How-To-Guides/Developing-a-ROS-2-Package.html#python-packages)
 
 ## How to build
 * build a package
