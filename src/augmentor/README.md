@@ -4,6 +4,8 @@
 * rclpy
 * msgs
 * ros2launch
+* tf_transformations   (sudo apt install ros-foxy-tf-transformations)
+* transforms3d         (sudo pip3 install transforms3d)
 
 ## Brief
 This module takes raw acceleration data and integrates it to get velocity and translation, both linearly and rotationally
