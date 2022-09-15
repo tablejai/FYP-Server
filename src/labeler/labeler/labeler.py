@@ -1,3 +1,4 @@
+from re import S
 import rclpy
 from rclpy.node import Node
 
@@ -5,6 +6,8 @@ from msgs.msg import ImuRawArray, ImuAugmented, ImuAugmentedArray
 from gesture_definition.gesture_definition import GestureDefinition
 from rosbags.rosbag2 import Reader
 from rosbags.serde import deserialize_cdr
+from pathlib import Path
+from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_types
 
 class GW():
     def __init__(self):
@@ -15,33 +18,32 @@ class Labeler(Node):
     
     def __init__(self):
         super().__init__('labeler')
-        self.gw = GW()
+        self.register_custom_types()
 
         # create reader instance and open for reading
         with Reader('/root/FYP-ROS/rosbag/rosbag2_2022_09_14-09_08_17') as reader:
             # topic and msgtype information is available on .connections list
             for connection in reader.connections:
-                print(connection.topic, connection.msgtype)
+                print("topic name: {0: <15}\t msg type: {1: <15}".format(connection.topic, connection.msgtype))
 
             # iterate over messages
             for connection, timestamp, rawdata in reader.messages():
-                if connection.topic == '/imu_raw/Imu':
+                if connection.topic == '/ImuRawArray':
                     msg = deserialize_cdr(rawdata, connection.msgtype)
-                    print(msg.header.frame_id)
-    
-    # def listener_callback(self, msg):
-    #     if msg.is_eng:
-    #         if self.gw.data.size() == 0:
-    #             pass
-    #         else:
-    #             class_ = input("Input Gesture Class and Press Enter to continue...")
-    #             self.gw.class_ = class_
-    #             self.gw.data = []
+                    print(msg)
 
-    #     self.gw.data.append(msg.data)
-        
-    #     # save gesture to file
+    def register_custom_types(self):
+        msg_install_path = '/root/FYP-ROS/install/msgs/share/msgs/msg/'
+        type_list = ["ImuRaw", "ImuRawArray", "ImuRawHeadless", "ImuAugmented", "ImuAugmentedArray", "ImuAugmentedHeadless"]
+        add_types = {}
+        for type_ in type_list:
+            idl_text = Path(msg_install_path + type_ + '.idl').read_text()
+            msg_text = Path(msg_install_path + type_ + '.msg').read_text()
+            add_types.update(get_types_from_idl(idl_text))
+            add_types.update(get_types_from_msg(msg_text, 'msgs/msg/' + type_))
 
+        # make types available to rosbags serializers/deserializers
+        register_types(add_types)
 
 def main(args=None):
     rclpy.init(args=args)
