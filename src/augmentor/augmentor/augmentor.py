@@ -2,7 +2,9 @@ import rclpy
 from rclpy.node import Node
 from msgs.msg import ImuRawArray, ImuAugmentedHeadless, ImuAugmentedArray    
 import tf_transformations
+import random
 
+raw_topic = '/ImuRawArray'
 augmented_topic = 'ImuAugmentedArray'
 
 class AugmentNode(Node):
@@ -10,7 +12,7 @@ class AugmentNode(Node):
     def __init__(self):
         super().__init__('imu_subscriber')
         
-        self.subscriber_ = self.create_subscription(ImuRawArray, 'ImuRawArray', self.listener_callback, 10)
+        self.subscriber_ = self.create_subscription(ImuRawArray, raw_topic, self.listener_callback, 10)
         self.publisher_ = self.create_publisher(ImuAugmentedArray, augmented_topic, 10)   
         
         self.curr_tick = self.prev_tick = self.get_clock().now().nanoseconds   #Time (nanoseconds)
@@ -66,6 +68,12 @@ class AugmentNode(Node):
                 self.imu_aug.data[i].quaternion_y = quat[1]
                 self.imu_aug.data[i].quaternion_z = quat[2]
                 self.imu_aug.data[i].quaternion_w = quat[3]
+
+        if random.randint(1, 1000) > 950:
+            self.imu_aug.is_eng.data = True
+            print('Sending ENG')
+        else:
+            self.imu_aug.is_eng.data = False
 
         # publish augmented data
         self.publisher_.publish(self.imu_aug)

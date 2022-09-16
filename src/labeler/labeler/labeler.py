@@ -1,4 +1,3 @@
-from re import S
 import rclpy
 from rclpy.node import Node
 
@@ -8,29 +7,56 @@ from rosbags.rosbag2 import Reader
 from rosbags.serde import deserialize_cdr
 from pathlib import Path
 from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_types
+from std_msgs.msg import String
 
-class GW():
-    def __init__(self):
-        self.data = []
-        self.class_ = GestureDefinition.NA
+bag_path = '/root/FYP-ROS/rosbag/rosbag2_2022_09_16-08_00_02'
 
 class Labeler(Node):
-    
-    def __init__(self):
-        super().__init__('labeler')
-        self.register_custom_types()
 
+    def __init__(self):
+        super().__init__('Labeler')
+        self.register_custom_types()
+        self.publisher_ = self.create_publisher(String, 'label', 10)
+        self.gw = []
+        self.timer = None
+        self.start_labeling()
+
+    def start_labeling(self):
         # create reader instance and open for reading
-        with Reader('/root/FYP-ROS/rosbag/rosbag2_2022_09_14-09_08_17') as reader:
+        raw_count = 0
+        with Reader(bag_path) as reader:
             # topic and msgtype information is available on .connections list
             for connection in reader.connections:
-                print("topic name: {0: <15}\t msg type: {1: <15}".format(connection.topic, connection.msgtype))
+                print("topic name: {0: <15}\t count {1: <15} msg type: {2: <15}".format(connection.topic, connection.msgcount, connection.msgtype))
+                if(connection.topic == "/ImuAugmentedArray"):
+                    raw_count = connection.msgcount
 
+            buffer = []
+            counter = 0
             # iterate over messages
             for connection, timestamp, rawdata in reader.messages():
-                if connection.topic == '/ImuRawArray':
+                if connection.topic == '/ImuAugmentedArray':
                     msg = deserialize_cdr(rawdata, connection.msgtype)
-                    print(msg)
+                    counter+=1
+                    if msg.is_eng.data == True:
+                        print("============END OF GESTURE============\n")
+                        self.timer = self.create_timer(1, self.timer_callback)
+                        prompt = "0\tNA\n1\tSlideLeft\n2\tSlideRight\n3\tSlideUp\n4\tSlideDown\n5\tZoomIn\n6\tZoomOut\n7\tHightlight\n8\tOn\n9\tOff\nPlease label the gesture: "
+                        self.gw.append(int(input(prompt)))
+                        self.timer.cancel()
+                        buffer.clear()
+                        print("\n\n=================data=================")
+                    else:
+                        buffer.append(msg.data)
+                        print('|{0:3d} - [{1:7.3f} {2:7.3f} {3:7.3f} {4:7.3f}]'.format(len(buffer), \
+                                                                                        msg.data[0].quaternion_x, \
+                                                                                        msg.data[0].quaternion_y, \
+                                                                                        msg.data[0].quaternion_z, \
+                                                                                        msg.data[0].quaternion_w))
+                        if(counter == raw_count):
+                            print("end of file")
+                            
+            # save labels to file
 
     def register_custom_types(self):
         msg_install_path = '/root/FYP-ROS/install/msgs/share/msgs/msg/'
@@ -44,10 +70,15 @@ class Labeler(Node):
 
         # make types available to rosbags serializers/deserializers
         register_types(add_types)
+    
+    def timer_callback(self):
+        self.get_logger().info("timer callback")
+        msg = String()
+        msg.data = "callback"
+        self.publisher_.publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)
-    print(GestureDefinition.NA)
 
     labeler = Labeler()
     rclpy.spin(labeler)
@@ -57,3 +88,21 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
+
+##
+## msg definition
+##
+# msgs__msg__ImuRawArray(
+#     header=std_msgs__msg__Header(
+#         stamp=builtin_interfaces__msg__Time(sec=1663146500, nanosec=167614138, __msgtype__='builtin_interfaces/msg/Time'), 
+#         frame_id='', 
+#         __msgtype__='std_msgs/msg/Header'
+#     ), 
+#     data=[
+#         msgs__msg__ImuRawHeadless(linear_acc_x=0.1, linear_acc_y=0.2, linear_acc_z=0.3, rotational_acc_x=0.1, rotational_acc_y=0.2, rotational_acc_z=0.3, __msgtype__='msgs/msg/ImuRawHeadless'),
+#         msgs__msg__ImuRawHeadless(linear_acc_x=0.1, linear_acc_y=0.2, linear_acc_z=0.3, rotational_acc_x=0.1, rotational_acc_y=0.2, rotational_acc_z=0.3, __msgtype__='msgs/msg/ImuRawHeadless'), 
+#         msgs__msg__ImuRawHeadless(linear_acc_x=0.1, linear_acc_y=0.2, linear_acc_z=0.3, rotational_acc_x=0.1, rotational_acc_y=0.2, rotational_acc_z=0.3, __msgtype__='msgs/msg/ImuRawHeadless')
+#     ],
+#     __msgtype__='msgs/msg/ImuRawArray'
+# )
