@@ -13,7 +13,7 @@ from std_msgs.msg import String
 import threading
 import time
 
-bag_path = '/root/FYP-ROS/rosbag/rosbag2_2022_09_16-08_00_02'
+bag_path = '/root/FYP-ROS/rosbag/rosbag2_2022_09_17-16_09_14'
 republishing_time = 0.3
 
 class Labeler(Node):
@@ -44,6 +44,7 @@ class Labeler(Node):
                     msg = deserialize_cdr(rawdata, connection.msgtype)
                     counter+=1
                     if msg.is_eng.data == True:
+                        self.buffer.append(msg)
                         print("============END OF GESTURE============\n")
                         self.timer = self.create_timer(1, self.timer_callback)
                         prompt = "0\tNA\n1\tSlideLeft\n2\tSlideRight\n3\tSlideUp\n4\tSlideDown\n5\tZoomIn\n6\tZoomOut\n7\tHightlight\n8\tOn\n9\tOff\nPlease label the gesture: "
@@ -111,7 +112,10 @@ class Labeler(Node):
                 h.quaternion_w = t.quaternion_w
                 
                 msg_pub.data.append(h)
-            # msg_pub.header = msg.header
+
+            msg_pub.header.stamp.sec = msg.header.stamp.sec
+            msg_pub.header.stamp.nanosec = msg.header.stamp.nanosec
+            msg_pub.is_eng.data = msg.is_eng.data
 
             self.publisher_.publish(msg_pub)
             time.sleep(republishing_time)

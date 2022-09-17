@@ -69,7 +69,7 @@ class AugmentNode(Node):
                 self.imu_aug.data[i].quaternion_z = quat[2]
                 self.imu_aug.data[i].quaternion_w = quat[3]
 
-        if random.randint(1, 1000) > 950:
+        if random.randint(1, 1000) > 960:
             self.imu_aug.is_eng.data = True
             print('Sending ENG')
         else:
