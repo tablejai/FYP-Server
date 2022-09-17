@@ -9,6 +9,10 @@ from pathlib import Path
 from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_types
 from std_msgs.msg import String
 
+# threading
+import threading
+import time
+
 bag_path = '/root/FYP-ROS/rosbag/rosbag2_2022_09_16-08_00_02'
 
 class Labeler(Node):
@@ -17,9 +21,9 @@ class Labeler(Node):
         super().__init__('Labeler')
         self.register_custom_types()
         self.publisher_ = self.create_publisher(String, 'label', 10)
+        self.timer_ = None
         self.gw = []
-        self.timer = None
-        self.start_labeling()
+        threading.Thread(target=self.start_labeling).start()
 
     def start_labeling(self):
         # create reader instance and open for reading
@@ -72,7 +76,7 @@ class Labeler(Node):
         register_types(add_types)
     
     def timer_callback(self):
-        self.get_logger().info("timer callback")
+        # self.get_logger().info("timer callback")
         msg = String()
         msg.data = "callback"
         self.publisher_.publish(msg)
