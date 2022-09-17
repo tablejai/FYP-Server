@@ -7,13 +7,15 @@ from rosbags.rosbag2 import Reader
 from rosbags.serde import deserialize_cdr
 from pathlib import Path
 from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_types
-from std_msgs.msg import String
 
 # threading
 import threading
 import time
 
-bag_path = '/root/FYP-ROS/rosbag/rosbag2_2022_09_17-16_09_14'
+bag_name = 'rosbag2_2022_09_17-16_09_14'
+bag_path = '/root/FYP-ROS/rosbag/bag/' + bag_name
+data_path = '/root/FYP-ROS/rosbag/data/' + bag_name + ".txt"
+label_path = '/root/FYP-ROS/rosbag/label/' + bag_name + ".txt"
 republishing_time = 0.3
 
 class Labeler(Node):
@@ -21,48 +23,93 @@ class Labeler(Node):
     def __init__(self):
         super().__init__('Labeler')
         self.register_custom_types()
+        
         self.publisher_ = self.create_publisher(ImuAugmentedArray, '/Imu_viz', 10)
         self.timer_ = None
-        self.gw = []
+        
+        self.labels = []
         self.buffer = []
-        threading.Thread(target=self.start_labeling).start()
+
+        self.label_thread = threading.Thread(target=self.start_labeling)
+        self.label_thread.start()
 
     def start_labeling(self):
+        data_f = open(data_path, 'w')
+        label_f = open(label_path, 'w')
+        ttl_raw_count = 0
         # create reader instance and open for reading
-        raw_count = 0
         with Reader(bag_path) as reader:
             # topic and msgtype information is available on .connections list
             for connection in reader.connections:
                 print("topic name: {0: <15}\t count {1: <15} msg type: {2: <15}".format(connection.topic, connection.msgcount, connection.msgtype))
                 if(connection.topic == "/ImuAugmentedArray"):
-                    raw_count = connection.msgcount
+                    ttl_raw_count = connection.msgcount
 
             counter = 0
+            print("\n\n===============data[{0:4d}/{1:4d}]===============".format(counter, ttl_raw_count))
+            
             # iterate over messages
             for connection, timestamp, rawdata in reader.messages():
                 if connection.topic == '/ImuAugmentedArray':
                     msg = deserialize_cdr(rawdata, connection.msgtype)
                     counter+=1
                     if msg.is_eng.data == True:
+                        print("==============END OF GESTURE===============\n")
                         self.buffer.append(msg)
-                        print("============END OF GESTURE============\n")
+
+                        # start publishing 
                         self.timer = self.create_timer(1, self.timer_callback)
-                        prompt = "0\tNA\n1\tSlideLeft\n2\tSlideRight\n3\tSlideUp\n4\tSlideDown\n5\tZoomIn\n6\tZoomOut\n7\tHightlight\n8\tOn\n9\tOff\nPlease label the gesture: "
-                        self.gw.append(int(input(prompt)))
+
+                        # create prompt and wait for user input
+                        prompt = ""
+                        for gd in GestureDefinition:
+                            prompt += str(gd.value) + "\t" + gd.name + "\n"
+                        prompt += "Please label the gesture: "
+
+                        # validate user input
+                        input_ = input(prompt)
+                        while not input_.isnumeric():
+                            self.get_logger().warn("input must be a number")
+                            input_ = input(prompt)
+                        while int(input_) > len(GestureDefinition) or int(input_) < 0:
+                            self.get_logger().warn("input must be between 0 and " + str(len(GestureDefinition)-1))
+                            input_ = input(prompt)
+                        label = int(input_)
+
+                        # collect label
+                        self.labels.append(label)
+
+                        # stop publishing 
                         self.timer.cancel()
+                        
+                        # save data to file
+                        for data in self.buffer:
+                            data_f.write(data.__str__() + '\n')
+                        label_f.write(str(label) + '\n')
+                        data_f.write("==============END OF GESTURE===============\n")
+
                         self.buffer.clear()
-                        print("\n\n=================data=================")
+                        print("\n\n===============data[{0:4d}/{1:4d}]===============".format(counter, ttl_raw_count))
                     else:
+                        # add data to buffer
                         self.buffer.append(msg)
-                        print('|{0:3d} - [{1:7.3f} {2:7.3f} {3:7.3f} {4:7.3f}]'.format(len(self.buffer), \
-                                                                                        msg.data[0].quaternion_x, \
-                                                                                        msg.data[0].quaternion_y, \
-                                                                                        msg.data[0].quaternion_z, \
-                                                                                        msg.data[0].quaternion_w))
-                        if(counter == raw_count):
-                            print("end of file")
-                            
-            # save labels to file
+                        print('|{0:3d}|   n0[{1:6.2f},{2:6.2f},{3:6.2f},{4:6.2f}]   n1[{5:6.2f},{6:6.2f},{7:6.2f},{8:6.2f}]   n2[{9:6.2f},{10:6.2f},{11:6.2f},{12:6.2f}]'\
+                            .format( \
+                                len(self.buffer), \
+                                msg.data[0].quaternion_x, msg.data[0].quaternion_y, msg.data[0].quaternion_z, msg.data[0].quaternion_w, \
+                                msg.data[1].quaternion_x, msg.data[1].quaternion_y, msg.data[1].quaternion_z, msg.data[1].quaternion_w, \
+                                msg.data[2].quaternion_x, msg.data[2].quaternion_y, msg.data[2].quaternion_z, msg.data[2].quaternion_w, \
+                            ))
+            
+            # close file streams
+            self.get_logger().info("end of file")
+            self.get_logger().info("closing file streams")
+            data_f.close()
+            label_f.close()
+
+            # stop thread and safely exit
+            self.timer.cancel()
+            # TODO
 
     def register_custom_types(self):
         msg_install_path = '/root/FYP-ROS/install/msgs/share/msgs/msg/'
@@ -80,38 +127,38 @@ class Labeler(Node):
     def timer_callback(self):
         for msg in self.buffer:
             msg_pub = ImuAugmentedArray()
-            for t in msg.data:
-                h = ImuAugmentedHeadless()
-                h.linear_acc_x = t.linear_acc_x
-                h.linear_acc_y = t.linear_acc_y
-                h.linear_acc_z = t.linear_acc_z
+            for in_ in msg.data:
+                out_ = ImuAugmentedHeadless()
+                out_.linear_acc_x = in_.linear_acc_x
+                out_.linear_acc_y = in_.linear_acc_y
+                out_.linear_acc_z = in_.linear_acc_z
 
-                h.linear_vel_x = t.linear_vel_x
-                h.linear_vel_y = t.linear_vel_y
-                h.linear_vel_z = t.linear_vel_z
+                out_.linear_vel_x = in_.linear_vel_x
+                out_.linear_vel_y = in_.linear_vel_y
+                out_.linear_vel_z = in_.linear_vel_z
 
-                h.linear_trans_x = t.linear_trans_x
-                h.linear_trans_y = t.linear_trans_y
-                h.linear_trans_z = t.linear_trans_z
+                out_.linear_trans_x = in_.linear_trans_x
+                out_.linear_trans_y = in_.linear_trans_y
+                out_.linear_trans_z = in_.linear_trans_z
 
-                h.rotational_acc_x = t.rotational_acc_x
-                h.rotational_acc_y = t.rotational_acc_y
-                h.rotational_acc_z = t.rotational_acc_z
+                out_.rotational_acc_x = in_.rotational_acc_x
+                out_.rotational_acc_y = in_.rotational_acc_y
+                out_.rotational_acc_z = in_.rotational_acc_z
 
-                h.rotational_vel_x = t.rotational_vel_x
-                h.rotational_vel_y = t.rotational_vel_y
-                h.rotational_vel_z = t.rotational_vel_z
+                out_.rotational_vel_x = in_.rotational_vel_x
+                out_.rotational_vel_y = in_.rotational_vel_y
+                out_.rotational_vel_z = in_.rotational_vel_z
 
-                h.rotational_trans_x = t.rotational_trans_x
-                h.rotational_trans_y = t.rotational_trans_y
-                h.rotational_trans_z = t.rotational_trans_z
+                out_.rotational_trans_x = in_.rotational_trans_x
+                out_.rotational_trans_y = in_.rotational_trans_y
+                out_.rotational_trans_z = in_.rotational_trans_z
 
-                h.quaternion_x = t.quaternion_x
-                h.quaternion_y = t.quaternion_y
-                h.quaternion_z = t.quaternion_z
-                h.quaternion_w = t.quaternion_w
+                out_.quaternion_x = in_.quaternion_x
+                out_.quaternion_y = in_.quaternion_y
+                out_.quaternion_z = in_.quaternion_z
+                out_.quaternion_w = in_.quaternion_w
                 
-                msg_pub.data.append(h)
+                msg_pub.data.append(out_)
 
             msg_pub.header.stamp.sec = msg.header.stamp.sec
             msg_pub.header.stamp.nanosec = msg.header.stamp.nanosec
