@@ -12,17 +12,41 @@ from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_typ
 import threading
 import time
 
-bag_name = 'rosbag2_2022_09_17-16_09_14'
-bag_path = '/root/FYP-ROS/rosbag/bag/' + bag_name
-data_path = '/root/FYP-ROS/rosbag/data/' + bag_name + ".txt"
-label_path = '/root/FYP-ROS/rosbag/label/' + bag_name + ".txt"
+# files
+import os
+
 republishing_time = 0.3
+
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {iteration}/{total}({percent}%) {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
 
 class Labeler(Node):
 
-    def __init__(self):
+    def __init__(self, bag_name):
         super().__init__('Labeler')
+        self.bag_path = '/root/FYP-ROS/rosbag/bag/' + bag_name
+        self.data_path = '/root/FYP-ROS/rosbag/data/' + bag_name + ".txt"
+        self.label_path = '/root/FYP-ROS/rosbag/label/' + bag_name + ".txt"
         self.register_custom_types()
+        os.system('cls' if os.name == 'nt' else 'clear')
         
         self.publisher_ = self.create_publisher(ImuAugmentedArray, '/Imu_viz', 10)
         self.timer_ = None
@@ -34,38 +58,42 @@ class Labeler(Node):
         self.label_thread.start()
 
     def start_labeling(self):
-        data_f = open(data_path, 'w')
-        label_f = open(label_path, 'w')
+        data_f = open(self.data_path, 'w')
+        label_f = open(self.label_path, 'w')
         ttl_raw_count = 0
         # create reader instance and open for reading
-        with Reader(bag_path) as reader:
+        with Reader(self.bag_path) as reader:
             # topic and msgtype information is available on .connections list
             for connection in reader.connections:
                 print("topic name: {0: <15}\t count {1: <15} msg type: {2: <15}".format(connection.topic, connection.msgcount, connection.msgtype))
-                if(connection.topic == "/ImuAugmentedArray"):
-                    ttl_raw_count = connection.msgcount
+            print("\n\n")
+
+            # calculate total raw count
+            for connection, timestamp, rawdata in reader.messages():
+                if connection.topic == '/ImuAugmentedArray':
+                    msg = deserialize_cdr(rawdata, connection.msgtype)
+                    if msg.is_eng.data == True:
+                        ttl_raw_count += 1
 
             counter = 0
-            print("\n\n===============data[{0:4d}/{1:4d}]===============".format(counter, ttl_raw_count))
-            
             # iterate over messages
             for connection, timestamp, rawdata in reader.messages():
                 if connection.topic == '/ImuAugmentedArray':
                     msg = deserialize_cdr(rawdata, connection.msgtype)
-                    counter+=1
                     if msg.is_eng.data == True:
-                        print("==============END OF GESTURE===============\n")
+                        printProgressBar(counter, ttl_raw_count, prefix = 'Progress:', suffix = 'labeling...', length = 50, printEnd="\r\n")
+                        counter+=1
                         self.buffer.append(msg)
 
                         # start publishing 
                         self.timer = self.create_timer(1, self.timer_callback)
 
                         # create prompt and wait for user input
-                        prompt = ""
+                        prompt = "\n"
                         for gd in GestureDefinition:
                             prompt += str(gd.value) + "\t" + gd.name + "\n"
                         prompt += "Please label the gesture: "
-
+                        
                         # validate user input
                         input_ = input(prompt)
                         while not input_.isnumeric():
@@ -75,6 +103,8 @@ class Labeler(Node):
                             self.get_logger().warn("input must be between 0 and " + str(len(GestureDefinition)-1))
                             input_ = input(prompt)
                         label = int(input_)
+                        print("\n\n.")
+                        os.system('cls' if os.name == 'nt' else 'clear')
 
                         # collect label
                         self.labels.append(label)
@@ -89,7 +119,6 @@ class Labeler(Node):
                         data_f.write("==============END OF GESTURE===============\n")
 
                         self.buffer.clear()
-                        print("\n\n===============data[{0:4d}/{1:4d}]===============".format(counter, ttl_raw_count))
                     else:
                         # add data to buffer
                         self.buffer.append(msg)
@@ -100,10 +129,13 @@ class Labeler(Node):
                                 msg.data[1].quaternion_x, msg.data[1].quaternion_y, msg.data[1].quaternion_z, msg.data[1].quaternion_w, \
                                 msg.data[2].quaternion_x, msg.data[2].quaternion_y, msg.data[2].quaternion_z, msg.data[2].quaternion_w, \
                             ))
-            
+
+            printProgressBar(counter, ttl_raw_count, prefix = 'Progress:', suffix = 'labeling...', length = 50, printEnd="\r\n")
+
             # close file streams
             self.get_logger().info("end of file")
             self.get_logger().info("closing file streams")
+            self.get_logger().info("ctrl c to exit...")
             data_f.close()
             label_f.close()
 
@@ -169,8 +201,12 @@ class Labeler(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-
-    labeler = Labeler()
+    
+    bag_name = input("Please enter the name of the bag file: ")
+    while not os.path.exists('/root/FYP-ROS/rosbag/bag/' + bag_name):
+        bag_name = input("File not exist, please enter the name of the bag file: ")
+        
+    labeler = Labeler(bag_name)
     rclpy.spin(labeler)
 
     labeler.destroy_node()
