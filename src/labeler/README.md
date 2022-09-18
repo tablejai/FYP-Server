@@ -2,8 +2,9 @@
 
 ## Dependencies
 * rclpy
-* msgs
 * rosbag2
+* msgs
+* gesture_definition
 
 ## How to compile
 ```sh
@@ -15,4 +16,9 @@ source install/setup.bash
 ```sh
 # run solely
 ros2 run labeler labeler
+```
+
+## For development
+```sh 
+colcon build && source install/setup.bash && ros2 run labeler labeler
 ```

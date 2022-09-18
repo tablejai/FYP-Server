@@ -3,9 +3,9 @@ from rclpy.node import Node
 
 from msgs.msg import ImuRawArray, ImuAugmented, ImuAugmentedArray, ImuAugmentedHeadless 
 from gesture_definition.gesture_definition import GestureDefinition
+from pathlib import Path
 from rosbags.rosbag2 import Reader
 from rosbags.serde import deserialize_cdr
-from pathlib import Path
 from rosbags.typesys import get_types_from_idl, get_types_from_msg, register_types
 
 # threading
