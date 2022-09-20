@@ -2,7 +2,7 @@
 
 ## Dependencies
 * rclpy
-* rosbag2
+* rosbag2 (pip install rosbags)
 * msgs
 * gesture_definition
 
