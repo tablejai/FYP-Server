@@ -16,15 +16,8 @@ docker run --name fyp_ros2_x11 -it --privileged --net=host --ipc=host \
 ros:foxy
 ```
 
-### Requirements
-```sh 
-sudo apt-get install keychain
-ssh-keygen -t rsa
-# add ssh id to ~/.ssh/id_rsa.pub
-cat ~/.ssh/id_rsa.pub
-# register this id to github
-git clone git@github.com:tablejai/FYP-ROS.git
-```
+### Install requirements
+refer to setup.sh
 
 ## How to setup ROS
 ```sh
@@ -51,7 +44,7 @@ More about creating and configuring the package
 1. Create your python code under [package]/[package]/[package.py]
 2. Add entry point to setup.py so that ros2 can locate its position
 ```py
-'[package] = [package].[package]:main',
+'[node_name] = [package].[script]:main',
 ```
 
 Links:
