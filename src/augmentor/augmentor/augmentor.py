@@ -10,7 +10,7 @@ augmented_topic = 'ImuAugmentedArray'
 class AugmentNode(Node):
 
     def __init__(self):
-        super().__init__('imu_subscriber')
+        super().__init__('augmentor')
         
         self.subscriber_ = self.create_subscription(ImuRawArray, raw_topic, self.listener_callback, 10)
         self.publisher_ = self.create_publisher(ImuAugmentedArray, augmented_topic, 10)   
@@ -82,10 +82,10 @@ class AugmentNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    augment_node = AugmentNode()
-    rclpy.spin(augment_node)
+    augmentor = AugmentNode()
+    rclpy.spin(augmentor)
 
-    augment_node.destroy_node()
+    augmentor.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
