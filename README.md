@@ -1,5 +1,11 @@
 # FYP ROS SYSTEM
 
+## Requirements
+```sh 
+git clone git@github.com:tablejai/FYP-ROS.git
+sudo apt-get install keychain
+```
+
 ## How to setup ROS
 ```sh
 # adding ROS system variables, such as ros2 command line
