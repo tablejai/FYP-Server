@@ -1,6 +1,0 @@
-float64 linear_acc_x
-float64 linear_acc_y
-float64 linear_acc_z
-float64 rotational_acc_x
-float64 rotational_acc_y
-float64 rotational_acc_z

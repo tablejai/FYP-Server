@@ -27,7 +27,7 @@ file(GLOB srv_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srv/*.srv)
 rosidl_generate_interfaces(${PROJECT_NAME}
     ${msg_files}
     ${srv_files}
-    DEPENDENCIES std_msgs
+    DEPENDENCIES std_msgs sensor_msgs
 )
 
 if(BUILD_TESTING)

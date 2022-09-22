@@ -1,2 +1,2 @@
 std_msgs/Header header
-ImuRawHeadless[] data
+sensor_msgs/Imu[] data
