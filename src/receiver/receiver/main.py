@@ -11,7 +11,7 @@ class MinimalPublisher(Node):
     def __init__(self):
         rclpy.init(args=None)
         super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'topic', 10)
+        self.publisher_ = self.create_publisher(String, 'raw', 10)
 
     def publishData(self, data):
         msg = String()
