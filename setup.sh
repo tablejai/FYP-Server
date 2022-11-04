@@ -1,5 +1,9 @@
 sudo apt update
 
+# Install Universe for finding Foxy
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+
 # Add ROS-Foxy repository public key
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
