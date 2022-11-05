@@ -8,19 +8,19 @@ import json
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3
 
+LENGTH = 3
+
 class RawPublisher(Node):
     def __init__(self):
         rclpy.init(args=None)
         super().__init__('raw_publisher')
 
-        self.length = 3
         self.publishers_ = []
-        
-        for i in range(self.length):
+        for i in range(LENGTH):
             self.publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
 
     def publishData(self, data):
-        for i in range(self.length):
+        for i in range(LENGTH):
             self.publishers_[i].publish(data[i])
             acc = data[i].linear_acceleration
             vel = data[i].angular_velocity
@@ -36,7 +36,7 @@ class HelloView(FlaskView):
         
         data = []
         data_jsons = []
-        for i in range(3):
+        for i in range(LENGTH):
             data_jsons.append(content["imu"+str(i)])
 
         for data_json in data_jsons:
@@ -55,7 +55,7 @@ class HelloView(FlaskView):
 
         HelloView.publisher.publishData(data)
         
-        return 'HI'
+        return 'Hi'
 
 def main(args=None):
     HelloView.register(HelloView.app)
