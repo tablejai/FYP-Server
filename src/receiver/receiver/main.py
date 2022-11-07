@@ -40,7 +40,8 @@ class HelloView(FlaskView):
         for i in range(LENGTH):
             imus_in_json.append(content["imu"+str(i)])
 
-        now = content["timestamp"]
+        t_sec = content["t_sec"]
+        t_nanosec = content["t_nanosec"]
         for data_json in imus_in_json:
             angular = Vector3()
             linear = Vector3()
@@ -50,9 +51,11 @@ class HelloView(FlaskView):
             linear.x = float(data_json['tx'])
             linear.y = float(data_json['ty'])
             linear.z = float(data_json['tz'])
-            
+
             imu = Imu()
-            imu.header.stamp.sec = now
+            imu.header.stamp.sec = t_sec
+            imu.header.stamp.nanosec = t_nanosec
+            imu.orientation = 
             imu.angular_velocity = angular
             imu.linear_acceleration = linear
             imus.append(imu)
