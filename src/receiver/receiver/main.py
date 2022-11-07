@@ -20,6 +20,7 @@ class RawPublisher(Node):
             self.publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
 
     def publishData(self, data):
+        print(f'@ {data[0].header.stamp.sec}')
         for i in range(LENGTH):
             self.publishers_[i].publish(data[i])
             acc = data[i].linear_acceleration
@@ -34,12 +35,13 @@ class HelloView(FlaskView):
     def post(self):
         content = json.loads(request.data)
         
-        data = []
-        data_jsons = []
+        imus = []
+        imus_in_json = []
         for i in range(LENGTH):
-            data_jsons.append(content["imu"+str(i)])
+            imus_in_json.append(content["imu"+str(i)])
 
-        for data_json in data_jsons:
+        now = content["timestamp"]
+        for data_json in imus_in_json:
             angular = Vector3()
             linear = Vector3()
             angular.x = float(data_json['ax'])
@@ -48,12 +50,14 @@ class HelloView(FlaskView):
             linear.x = float(data_json['tx'])
             linear.y = float(data_json['ty'])
             linear.z = float(data_json['tz'])
+            
             imu = Imu()
+            imu.header.stamp.sec = now
             imu.angular_velocity = angular
             imu.linear_acceleration = linear
-            data.append(imu)
+            imus.append(imu)
 
-        HelloView.publisher.publishData(data)
+        HelloView.publisher.publishData(imus)
         
         return 'Hi'
 
