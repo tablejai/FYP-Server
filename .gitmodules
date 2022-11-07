@@ -1,0 +1,4 @@
+[submodule "src/imu_tools"]
+	path = src/imu_tools
+	url = git@github.com:CCNYRoboticsLab/imu_tools.git
+	branch = foxy
