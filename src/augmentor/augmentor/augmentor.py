@@ -5,7 +5,7 @@ import tf_transformations
 import random
 
 raw_topic = '/ImuRawArray'
-augmented_topic = 'ImuAugmentedArray'
+augmented_topic = '/ImuAugmentedArray'
 
 class AugmentNode(Node):
 

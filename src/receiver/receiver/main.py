@@ -6,7 +6,7 @@ from flask_classful import FlaskView, route
 import json
 
 from sensor_msgs.msg import Imu
-from geometry_msgs.msg import Vector3
+from geometry_msgs.msg import Vector3, Quaternion
 
 LENGTH = 3
 
@@ -25,7 +25,7 @@ class RawPublisher(Node):
             self.publishers_[i].publish(data[i])
             acc = data[i].linear_acceleration
             vel = data[i].angular_velocity
-            print(f'Publishing IMU[{i}]:\t[{acc.x}, {acc.y}, {acc.z}] [{vel.x}, {vel.y}, {vel.z}]')
+            print(f'Publishing IMU[{i}]:\tacc[{acc.x}, {acc.y}, {acc.z}]\tvel[{vel.x}, {vel.y}, {vel.z}]')
 
 class HelloView(FlaskView):
     app = Flask("Test")
@@ -55,7 +55,6 @@ class HelloView(FlaskView):
             imu = Imu()
             imu.header.stamp.sec = t_sec
             imu.header.stamp.nanosec = t_nanosec
-            imu.orientation = 
             imu.angular_velocity = angular
             imu.linear_acceleration = linear
             imus.append(imu)
