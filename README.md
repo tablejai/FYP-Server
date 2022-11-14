@@ -30,19 +30,34 @@ Two ways to run ROS workspace, either run on docker or run on ec2:
     ```
 
 2. Run Ros2 docker container
-    ```sh
-    xhost + 127.0.0.1
-    docker run --name fyp_ros2_x11 -it --privileged --net=host --ipc=host \
-    --device=/dev/dri:/dev/dri \
-    -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=host.docker.internal:0 \
-    -v $HOME/.Xauthority:/home/$(id -un)/.Xauthority -e XAUTHORITY=/home/$(id -un)/.Xauthority \
-    -e DOCKER_USER_NAME=$(id -un) \
-    -e DOCKER_USER_ID=$(id -u) \
-    -e DOCKER_USER_GROUP_NAME=$(id -gn) \
-    -e DOCKER_USER_GROUP_ID=$(id -g) \
-    -e ROS_IP=127.0.0.1 \
-    ros:foxy
-    ```
+    * For MacOS 
+	    ```sh
+	    xhost + 127.0.0.1
+	    docker run --name fyp_ros2_x11 -it --privileged --net=host --ipc=host \
+	    --device=/dev/dri:/dev/dri \
+	    -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=host.docker.internal:0 \
+	    -v $HOME/.Xauthority:/home/$(id -un)/.Xauthority -e XAUTHORITY=/home/$(id -un)/.Xauthority \
+	    -e DOCKER_USER_NAME=$(id -un) \
+	    -e DOCKER_USER_ID=$(id -u) \
+	    -e DOCKER_USER_GROUP_NAME=$(id -gn) \
+	    -e DOCKER_USER_GROUP_ID=$(id -g) \
+	    -e ROS_IP=127.0.0.1 \
+	    ros:foxy
+	    ```
+    * For Ubuntu 
+	    ```sh
+	    xhost + 127.0.0.1
+	    docker run --name fyp_ros2_x11 -it --privileged --net=host --ipc=host \
+	    --device=/dev/dri:/dev/dri \
+	    -v /tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY" \
+	    -v $HOME/.Xauthority:/home/$(id -un)/.Xauthority -e XAUTHORITY=/home/$(id -un)/.Xauthority \
+	    -e DOCKER_USER_NAME=$(id -un) \
+	    -e DOCKER_USER_ID=$(id -u) \
+	    -e DOCKER_USER_GROUP_NAME=$(id -gn) \
+	    -e DOCKER_USER_GROUP_ID=$(id -g) \
+	    -e ROS_IP=127.0.0.1 \
+	    ros:foxy
+	    ```
 
 ##  2. <a name='SetupEnvironment'></a>Setup Environment
 
