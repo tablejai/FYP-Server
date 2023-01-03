@@ -1,36 +1,60 @@
 import rclpy
-import json
 from rclpy.node import Node
 
-from std_msgs.msg import String
-
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_classful import FlaskView, route
+import json
 
-class MinimalPublisher(Node):
+from sensor_msgs.msg import Imu
+from geometry_msgs.msg import Vector3
+
+LENGTH = 3
+
+class RawPublisher(Node):
     def __init__(self):
         rclpy.init(args=None)
-        super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'raw', 10)
+        super().__init__('raw_publisher')
+
+        self.publishers_ = []
+        for i in range(LENGTH):
+            self.publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
 
     def publishData(self, data):
-        msg = String()
-        msg.data = data
-        self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
+        for i in range(LENGTH):
+            self.publishers_[i].publish(data[i])
+            acc = data[i].linear_acceleration
+            vel = data[i].angular_velocity
+            print(f'Publishing IMU[{i}]:\t[{acc.x}, {acc.y}, {acc.z}] [{vel.x}, {vel.y}, {vel.z}]')
 
 class HelloView(FlaskView):
     app = Flask("Test")
-    publisher= MinimalPublisher()
+    publisher= RawPublisher()
 
     @route('/',methods=['POST'], strict_slashes=False)
     def post(self):
         content = json.loads(request.data)
-        imu0 = content["imu0"]
-        imu0_ax = imu0['ax']
-        imu0_ay = imu0['ay']
-        imu0_az = imu0['az']
-        HelloView.publisher.publishData(str(imu0_ax))
+        
+        data = []
+        data_jsons = []
+        for i in range(LENGTH):
+            data_jsons.append(content["imu"+str(i)])
+
+        for data_json in data_jsons:
+            angular = Vector3()
+            linear = Vector3()
+            angular.x = float(data_json['ax'])
+            angular.y = float(data_json['ay'])
+            angular.z = float(data_json['az'])
+            linear.x = float(data_json['tx'])
+            linear.y = float(data_json['ty'])
+            linear.z = float(data_json['tz'])
+            imu = Imu()
+            imu.angular_velocity = angular
+            imu.linear_acceleration = linear
+            data.append(imu)
+
+        HelloView.publisher.publishData(data)
+        
         return 'Hi'
 
 def main(args=None):

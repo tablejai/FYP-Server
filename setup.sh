@@ -12,13 +12,12 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 
 # Install dependencies for foxy and foxy itself
 sudo apt install keychain python3-pip ros-foxy-tf-transformations ros-foxy-rqt ros-foxy-rqt-common-plugins ros-foxy-desktop python3-argcomplete -y
-sudo pip install transforms3d
 
 # Install colcon for python
 sudo apt install python3-colcon-common-extensions
 
 # Install flask
-python3 -m pip install flask Flask==2.1.2 Flask-Classful==0.14.2 Werkzeug==2.1.2
+python3 -m pip install Flask==2.1.2 Flask-Classful==0.14.2 Werkzeug==2.1.2 transforms3d
 
 # reinit rqt
 rm ~/.config/ros.org/rqt_gui.ini
