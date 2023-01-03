@@ -17,7 +17,9 @@ ros:foxy
 ```
 
 ### Install requirements
-refer to setup.sh
+```sh
+sudo bash setup.sh
+```
 
 ## How to setup ROS
 ```sh
@@ -25,7 +27,7 @@ refer to setup.sh
 source /opt/ros/foxy/setup.bash     
 
 ## adding custom ROS variables so that ros2 command line understand our packages, such as msgs, augmentor
-source /path_to_this_workspace/install/setup.bash  
+source /path_to_this_workspace/install/setup.bash 
 ```
 
 ## How to create a package
@@ -41,11 +43,15 @@ ros2 pkg create --build-type ament_python [package]
 ````
 
 More about creating and configuring the package
-1. Create your python code under [package]/[package]/[package.py]
-2. Add entry point to setup.py so that ros2 can locate its position
-```py
-'[node_name] = [package].[script]:main',
-```
+1. Write your python code under [package]/[package]/[package.py]
+2. Add an entry point to setup.py so that ros2 can locate its position
+    ```py
+    entry_points={
+        'console_scripts': [
+            '[node_name] = [package].[script]:main',
+        ],
+    }
+    ```
 
 Links:
 
@@ -58,7 +64,7 @@ Links:
     colcon build --packages-select [package]
     ```
 
-* build a package with its dependencies
+* build a package with its dependencies(recommended)
     ```sh 
     colcon build --packages-up-to [package]
     ```
@@ -81,3 +87,53 @@ ros2 run [package] [executable]
 # or
 python3 src/[package]/src/[executable]
 ```
+
+## System Overview
+
+* receiver
+    ```
+    Subscribers:
+
+    Publishers:
+        /raw: std_msgs/msg/String
+    ```
+
+* augmentor
+    ```
+    Subscribers:
+        /ImuRawArray: msgs/msg/ImuRawArray
+    Publishers:
+        /ImuAugmentedArray: msgs/msg/ImuAugmentedArray
+    ```
+
+* labeler
+    ```
+    Subscribers:
+
+    Publishers:
+        /Imu_viz: msgs/msg/ImuAugmentedArray
+    ```
+
+* visualizer(TODO)
+    ```
+    Subscribers:
+        /ImuAugmentedArray: msgs/msg/ImuAugmentedArray
+    Publishers:
+        /Imu_viz: msgs/msg/ImuAugmentedArray
+    ```
+
+* model(TODO)
+    ```
+    Subscribers:
+        /ImuAugmentedArray: msgs/msg/ImuAugmentedArray
+    Publishers:
+        /gesture: msgs/msg/GestureType
+    ```
+
+* decision(TODO)
+    ```
+    Subscribers:
+        /gesture: msgs/msg/GestureType
+    Publishers:
+        /command: msgs/msg/Command
+    ```

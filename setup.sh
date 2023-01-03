@@ -18,7 +18,7 @@ sudo pip install transforms3d
 sudo apt install python3-colcon-common-extensions
 
 # Install flask
-python3 -m pip install flask
+python3 -m pip install flask Flask==2.1.2 Flask-Classful==0.14.2 Werkzeug==2.1.2
 
 # reinit rqt
 rm ~/.config/ros.org/rqt_gui.ini
