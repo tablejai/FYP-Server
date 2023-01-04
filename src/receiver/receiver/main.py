@@ -2,11 +2,13 @@ import rclpy
 from rclpy.node import Node
 
 from flask import Flask, request
+import json
 
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import MagneticField
+from std_msgs.msg import Header
 from geometry_msgs.msg import Vector3
-import json
+from builtin_interfaces.msg import Time
 
 IMU_NODE_NUM = 3
 
@@ -37,18 +39,21 @@ class RawPublisherMaster(Node):
             mag = magField.magnetic_field
             print(f'Publishing IMU[{i:2d}]: A[{accel.x:+8.2f}, {accel.y:+8.2f}, {accel.z:+8.2f}] G[{gyro.x:+8.2f}, {gyro.y:+8.2f}, {gyro.z:+8.2f}] M[{mag.x:+8.2f}, {mag.y:+8.2f}, {mag.z:+8.2f}]')
 
-@app.route('/', methods=['POST'])
+@app.route('/')
 def publish_imu_data():
     content = json.loads(request.data)
     data = []
     for i in range(IMU_NODE_NUM):
-        data_json = content["imu"+str(i)]
-        accel = Vector3(x=float(data_json['ax']), y=float(data_json['ay']), z=float(data_json['az']))
-        gyro = Vector3(x=float(data_json['gx']), y=float(data_json['gy']), z=float(data_json['gz']))
-        mag = Vector3(x=float(data_json['mx']), y=float(data_json['my']), z=float(data_json['mz']))
+        sec = int(content['t_sec'])
+        nsec = int(content['t_nanosec'])
+        imu_raw = content["imu"+str(i)]
+        accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
+        gyro = Vector3(x=float(imu_raw['gx']), y=float(imu_raw['gy']), z=float(imu_raw['gz']))
+        mag = Vector3(x=float(imu_raw['mx']), y=float(imu_raw['my']), z=float(imu_raw['mz']))
 
-        imu = Imu(linear_acceleration=accel, angular_velocity=gyro)
-        magField = MagneticField(magnetic_field=mag)
+        header = Header(stamp=Time(sec=sec, nanosec=nsec), frame_id='imu'+str(i))
+        imu = Imu(header=header, linear_acceleration=accel, angular_velocity=gyro)
+        magField = MagneticField(header=header, magnetic_field=mag)
         data.append((imu, magField))
 
     publisherMaster.publish_data(data)
