@@ -2,83 +2,69 @@ import rclpy
 from rclpy.node import Node
 
 from flask import Flask, request
-from flask_classful import FlaskView, route
 import json
 
 from sensor_msgs.msg import Imu
-from geometry_msgs.msg import Vector3, Quaternion
+from sensor_msgs.msg import MagneticField
+from std_msgs.msg import Header
+from geometry_msgs.msg import Vector3
+from builtin_interfaces.msg import Time
 
-LENGTH = 3
+IMU_NODE_NUM = 3
 
-class RawPublisher(Node):
+app = Flask(__name__)
+rclpy.init()
+
+class RawPublisherMaster(Node):
     def __init__(self):
-        rclpy.init(args=None)
         super().__init__('raw_publisher')
 
-        self.publishers_ = []
-        for i in range(LENGTH):
-            self.publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
+        self.imu_publishers_ = []
+        self.mag_publishers_ = []
+        for i in range(IMU_NODE_NUM):
+            self.imu_publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
+            self.mag_publishers_.append(self.create_publisher(MagneticField, 'Mag_raw'+str(i), 10))
 
-    def publishData(self, data):
-        print(f'@ {data[0].header.stamp.sec}')
-        for i in range(LENGTH):
-            self.publishers_[i].publish(data[i])
-            acc = data[i].linear_acceleration
-            vel = data[i].angular_velocity
-            print(f'Publishing IMU[{i}]:\tacc[{acc.x}, {acc.y}, {acc.z}]\tvel[{vel.x}, {vel.y}, {vel.z}]')
+    def publish_data(self, data):
+        for i in range(IMU_NODE_NUM):
+            imu, magField = data[i]
 
-class HelloView(FlaskView):
-    app = Flask("Test")
-    publisher= RawPublisher()
+            # publish data
+            self.imu_publishers_[i].publish(imu)
+            self.mag_publishers_[i].publish(magField)
 
-    @route('/',methods=['POST'], strict_slashes=False)
-    def post(self):
-        content = json.loads(request.data)
-        
-        imus = []
-        imus_in_json = []
-        for i in range(LENGTH):
-            imus_in_json.append(content["imu"+str(i)])
+            # Print log
+            accel = imu.linear_acceleration
+            gyro = imu.angular_velocity
+            mag = magField.magnetic_field
+            print(f'Publishing IMU[{i:2d}]: A[{accel.x:+8.2f}, {accel.y:+8.2f}, {accel.z:+8.2f}] G[{gyro.x:+8.2f}, {gyro.y:+8.2f}, {gyro.z:+8.2f}] M[{mag.x:+8.2f}, {mag.y:+8.2f}, {mag.z:+8.2f}]')
 
-        t_sec = content["t_sec"]
-        t_nanosec = content["t_nanosec"]
-        for data_json in imus_in_json:
-            angular = Vector3()
-            linear = Vector3()
-            angular.x = float(data_json['ax'])
-            angular.y = float(data_json['ay'])
-            angular.z = float(data_json['az'])
-            linear.x = float(data_json['tx'])
-            linear.y = float(data_json['ty'])
-            linear.z = float(data_json['tz'])
+@app.route('/')
+def publish_imu_data():
+    content = json.loads(request.data)
+    data = []
+    for i in range(IMU_NODE_NUM):
+        sec = int(content['t_sec'])
+        nsec = int(content['t_nanosec'])
+        imu_raw = content["imu"+str(i)]
+        accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
+        gyro = Vector3(x=float(imu_raw['gx']), y=float(imu_raw['gy']), z=float(imu_raw['gz']))
+        mag = Vector3(x=float(imu_raw['mx']), y=float(imu_raw['my']), z=float(imu_raw['mz']))
 
-            imu = Imu()
-            imu.header.stamp.sec = t_sec
-            imu.header.stamp.nanosec = t_nanosec
-            imu.angular_velocity = angular
-            imu.linear_acceleration = linear
-            imus.append(imu)
+        header = Header(stamp=Time(sec=sec, nanosec=nsec), frame_id='imu'+str(i))
+        imu = Imu(header=header, linear_acceleration=accel, angular_velocity=gyro)
+        magField = MagneticField(header=header, magnetic_field=mag)
+        data.append((imu, magField))
 
-        HelloView.publisher.publishData(imus)
-        
-        return 'Hi'
+    publisherMaster.publish_data(data)
+    return 'Data Received and Published!'
 
-def main(args=None):
-    HelloView.register(HelloView.app)
-    HelloView.app.run(host='0.0.0.0', port=5001, debug=True)
+# keep this order
+publisherMaster = RawPublisherMaster()
 
+app.run(host='0.0.0.0', port=5001, debug=True)
+rclpy.spin(publisherMaster)
 
-    rclpy.spin(HelloView.publisher)
-
-    HelloView.publisher.init()
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    publisher.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
-
+# destroy node and shutdown
+publisherMaster.destroy_node()
+rclpy.shutdown()
