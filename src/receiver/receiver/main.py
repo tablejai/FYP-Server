@@ -53,6 +53,7 @@ class HelloView(FlaskView):
             linear.z = float(data_json['tz'])
 
             imu = Imu()
+            imu.header.frame_id = "test"
             imu.header.stamp.sec = t_sec
             imu.header.stamp.nanosec = t_nanosec
             imu.angular_velocity = angular
