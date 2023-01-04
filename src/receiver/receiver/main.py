@@ -8,7 +8,7 @@ from sensor_msgs.msg import MagneticField
 from geometry_msgs.msg import Vector3
 import json
 
-LENGTH = 3
+IMU_NODE_NUM = 3
 
 app = Flask(__name__)
 rclpy.init()
@@ -17,29 +17,31 @@ class RawPublisherMaster(Node):
     def __init__(self):
         super().__init__('raw_publisher')
 
-        self.publishers_ = []
-        for i in range(LENGTH):
-            self.publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
+        self.imu_publishers_ = []
+        self.mag_publishers_ = []
+        for i in range(IMU_NODE_NUM):
+            self.imu_publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
+            self.mag_publishers_.append(self.create_publisher(MagneticField, 'Mag_raw'+str(i), 10))
 
     def publish_data(self, data):
-        for i in range(LENGTH):
+        for i in range(IMU_NODE_NUM):
             imu, magField = data[i]
 
-            # publish data(TODO: publish mag data)
-            self.publishers_[i].publish(imu)
+            # publish data
+            self.imu_publishers_[i].publish(imu)
+            self.mag_publishers_[i].publish(magField)
 
-            # Print log(TODO: formated print)
+            # Print log
             accel = imu.linear_acceleration
             gyro = imu.angular_velocity
             mag = magField.magnetic_field
-            print(f'Publishing IMU[{i}]:\t A[{accel.x}, {accel.y}, {accel.z}] G[{gyro.x}, {gyro.y}, {gyro.z}] M[{mag.x}, {mag.y}, {mag.z}]')
-
+            print(f'Publishing IMU[{i:2d}]: A[{accel.x:+8.2f}, {accel.y:+8.2f}, {accel.z:+8.2f}] G[{gyro.x:+8.2f}, {gyro.y:+8.2f}, {gyro.z:+8.2f}] M[{mag.x:+8.2f}, {mag.y:+8.2f}, {mag.z:+8.2f}]')
 
 @app.route('/', methods=['POST'])
 def publish_imu_data():
     content = json.loads(request.data)
     data = []
-    for i in range(LENGTH):
+    for i in range(IMU_NODE_NUM):
         data_json = content["imu"+str(i)]
         accel = Vector3(x=float(data_json['ax']), y=float(data_json['ay']), z=float(data_json['az']))
         gyro = Vector3(x=float(data_json['gx']), y=float(data_json['gy']), z=float(data_json['gz']))
