@@ -4,14 +4,17 @@ from rclpy.node import Node
 from flask import Flask, request
 
 from sensor_msgs.msg import Imu
+from sensor_msgs.msg import MagneticField
 from geometry_msgs.msg import Vector3
 import json
 
 LENGTH = 3
 
-class RawPublisher(Node):
+app = Flask(__name__)
+rclpy.init()
+
+class RawPublisherMaster(Node):
     def __init__(self):
-        rclpy.init(args=None)
         super().__init__('raw_publisher')
 
         self.publishers_ = []
@@ -20,51 +23,41 @@ class RawPublisher(Node):
 
     def publish_data(self, data):
         for i in range(LENGTH):
-            self.publishers_[i].publish(data[i])
-            acc = data[i].linear_acceleration
-            vel = data[i].angular_velocity
-            print(f'Publishing IMU[{i}]:\t[{acc.x}, {acc.y}, {acc.z}] [{vel.x}, {vel.y}, {vel.z}]')
+            imu, magField = data[i]
 
-app = Flask(__name__)
-publisher = RawPublisher()
+            # publish data(TODO: publish mag data)
+            self.publishers_[i].publish(imu)
+
+            # Print log(TODO: formated print)
+            accel = imu.linear_acceleration
+            gyro = imu.angular_velocity
+            mag = magField.magnetic_field
+            print(f'Publishing IMU[{i}]:\t A[{accel.x}, {accel.y}, {accel.z}] G[{gyro.x}, {gyro.y}, {gyro.z}] M[{mag.x}, {mag.y}, {mag.z}]')
+
 
 @app.route('/', methods=['POST'])
 def publish_imu_data():
     content = json.loads(request.data)
     data = []
-    data_jsons = []
     for i in range(LENGTH):
-        data_jsons.append(content["imu"+str(i)])
+        data_json = content["imu"+str(i)]
+        accel = Vector3(x=float(data_json['ax']), y=float(data_json['ay']), z=float(data_json['az']))
+        gyro = Vector3(x=float(data_json['gx']), y=float(data_json['gy']), z=float(data_json['gz']))
+        mag = Vector3(x=float(data_json['mx']), y=float(data_json['my']), z=float(data_json['mz']))
 
-    for data_json in data_jsons:
-        accel = Vector3()
-        gyro = Vector3()
-        mag = Vector3()
-        accel.x = float(data_json['ax'])
-        accel.y = float(data_json['ay'])
-        accel.z = float(data_json['az'])
-        gyro.x = float(data_json['gx'])
-        gyro.y = float(data_json['gy'])
-        gyro.z = float(data_json['gz'])
-        mag.x = float(data_json['mx'])
-        mag.y = float(data_json['my'])
-        mag.z = float(data_json['mz'])
+        imu = Imu(linear_acceleration=accel, angular_velocity=gyro)
+        magField = MagneticField(magnetic_field=mag)
+        data.append((imu, magField))
 
-        imu = Imu()
-        imu.linear_acceleration = accel
-        imu.angular_velocity = gyro
-        data.append(imu)
-
-    publisher.publish_data(data)
-
+    publisherMaster.publish_data(data)
     return 'Data Received and Published!'
 
-def main(args=None):
-    app.run(host='0.0.0.0', port=5001, debug=True)
-    rclpy.spin(publisher)
+# keep this order
+publisherMaster = RawPublisherMaster()
 
-    publisher.destroy_node()
-    rclpy.shutdown()
+app.run(host='0.0.0.0', port=5001, debug=True)
+rclpy.spin(publisherMaster)
 
-if __name__ == '__main__':
-    main()
+# destroy node and shutdown
+publisherMaster.destroy_node()
+rclpy.shutdown()
