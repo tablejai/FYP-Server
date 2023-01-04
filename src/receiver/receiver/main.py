@@ -51,7 +51,7 @@ class HelloView(FlaskView):
             linear.x = float(data_json['tx'])
             linear.y = float(data_json['ty'])
             linear.z = float(data_json['tz'])
-
+# already fixed in other branch
             imu = Imu()
             imu.header.frame_id = "test"
             imu.header.stamp.sec = t_sec
