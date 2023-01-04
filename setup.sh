@@ -5,7 +5,7 @@ sudo apt install software-properties-common -y
 sudo add-apt-repository universe
 
 # Install dependencies for foxy and foxy itself
-sudo apt install curl keychain python3-pip ros-foxy-tf-transformations ros-foxy-rqt ros-foxy-rqt-common-plugins ros-foxy-desktop python3-argcomplete -y
+sudo apt install curl vim keychain python3-pip ros-foxy-tf-transformations ros-foxy-rqt ros-foxy-rqt-common-plugins ros-foxy-desktop python3-argcomplete -y
 
 # Add ROS-Foxy repository public key
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
