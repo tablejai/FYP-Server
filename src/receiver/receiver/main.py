@@ -27,7 +27,7 @@ class RawPublisherMaster(Node):
 
     def publish_data(self, data):
         for i in range(IMU_NODE_NUM):
-            imu, magField = data[i]
+            stamp, imu, magField = data[i]
 
             # publish data
             self.imu_publishers_[i].publish(imu)
@@ -37,27 +37,35 @@ class RawPublisherMaster(Node):
             accel = imu.linear_acceleration
             gyro = imu.angular_velocity
             mag = magField.magnetic_field
-            print(f'Publishing IMU[{i:2d}]: A[{accel.x:+8.2f}, {accel.y:+8.2f}, {accel.z:+8.2f}] G[{gyro.x:+8.2f}, {gyro.y:+8.2f}, {gyro.z:+8.2f}] M[{mag.x:+8.2f}, {mag.y:+8.2f}, {mag.z:+8.2f}]')
+            print(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
 
 @app.route('/')
 def publish_imu_data():
-    content = json.loads(request.data)
-    data = []
-    for i in range(IMU_NODE_NUM):
-        sec = int(content['t_sec'])
-        nsec = int(content['t_nanosec'])
-        imu_raw = content["imu"+str(i)]
-        accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
-        gyro = Vector3(x=float(imu_raw['gx']), y=float(imu_raw['gy']), z=float(imu_raw['gz']))
-        mag = Vector3(x=float(imu_raw['mx']), y=float(imu_raw['my']), z=float(imu_raw['mz']))
+    content = {}
+    try:
+        request.data = request.data.split(b'\x00')[0]
+        content = json.loads(request.data)
+        data = []
+        for i in range(IMU_NODE_NUM):
+            sec = int(content['t_sec'])
+            nsec = int(content['t_nanosec'])
+            imu_raw = content["imu"+str(i)]
+            accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
+            gyro = Vector3(x=float(imu_raw['gx']), y=float(imu_raw['gy']), z=float(imu_raw['gz']))
+            mag = Vector3(x=float(imu_raw['mx']), y=float(imu_raw['my']), z=float(imu_raw['mz']))
 
-        header = Header(stamp=Time(sec=sec, nanosec=nsec), frame_id='imu'+str(i))
-        imu = Imu(header=header, linear_acceleration=accel, angular_velocity=gyro)
-        magField = MagneticField(header=header, magnetic_field=mag)
-        data.append((imu, magField))
+            stamp = Time(sec=sec, nanosec=nsec)
+            header = Header(stamp=stamp, frame_id='imu'+str(i))
+            imu = Imu(header=header, linear_acceleration=accel, angular_velocity=gyro)
+            magField = MagneticField(header=header, magnetic_field=mag)
+            data.append((stamp, imu, magField))
 
-    publisherMaster.publish_data(data)
-    return 'Data Received and Published!'
+        publisherMaster.publish_data(data)
+        return "0"
+
+    except json.JSONDecodeError as e:
+        print(request.data)
+        return "-1"
 
 # keep this order
 publisherMaster = RawPublisherMaster()
