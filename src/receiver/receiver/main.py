@@ -1,12 +1,14 @@
 import rclpy
 from rclpy.node import Node
 
+import threading 
 from flask import Flask, request
 import json
 
+from std_msgs.msg import Header
+from std_msgs.msg import String
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import MagneticField
-from std_msgs.msg import Header
 from geometry_msgs.msg import Vector3
 from builtin_interfaces.msg import Time
 
@@ -17,13 +19,13 @@ rclpy.init()
 
 class RawPublisherMaster(Node):
     def __init__(self):
-        super().__init__('raw_publisher')
+        super().__init__('Receiver')
 
         self.imu_publishers_ = []
         self.mag_publishers_ = []
         for i in range(IMU_NODE_NUM):
-            self.imu_publishers_.append(self.create_publisher(Imu, 'Imu_raw'+str(i), 10))
-            self.mag_publishers_.append(self.create_publisher(MagneticField, 'Mag_raw'+str(i), 10))
+            self.imu_publishers_.append(self.create_publisher(Imu, '/Raw/Imu'+str(i), 10))
+            self.mag_publishers_.append(self.create_publisher(MagneticField, '/Raw/Mag'+str(i), 10))
 
     def publish_data(self, data):
         for i in range(IMU_NODE_NUM):
