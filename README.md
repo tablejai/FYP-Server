@@ -1,7 +1,6 @@
-# FYP ROS SYSTEM
-
 <!-- vscode-markdown-toc -->
 * 1. [Create Environment](#CreateEnvironment)
+	* 1.1. [Install requirements](#Installrequirements)
 * 2. [Setup Environment](#SetupEnvironment)
 	* 2.1. [Install dependencies/requirements](#Installdependenciesrequirements)
 	* 2.2. [Setup ROS](#SetupROS)
@@ -13,13 +12,20 @@
 	* 3.3. [How to run](#Howtorun)
 		* 3.3.1. [C/C++](#CC-1)
 		* 3.3.2. [Python](#Python-1)
+* 4. [System Overview](#SystemOverview)
+* 5. [ROS bag](#ROSbag)
+	* 5.1. [How to record](#Howtorecord)
+	* 5.2. [How to play](#Howtoplay)
+* 6. [Rviz](#Rviz)
+	* 6.1. [How to start](#Howtostart)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
-<!-- This TOC is created by Github Extension "Markdown TOC" -->
+
+# FYP ROS SYSTEM
 
 ##  1. <a name='CreateEnvironment'></a>Create Environment
 
@@ -59,7 +65,7 @@ Two ways to run ROS workspace, either run on docker or run on ec2:
 	    ros:foxy
 	    ```
 
-### Install requirements
+###  1.1. <a name='Installrequirements'></a>Install requirements
 ```sh
 sudo bash setup.sh
 ```
@@ -138,7 +144,7 @@ ros2 run [package] [executable]
 python3 src/[package]/src/[executable]
 ```
 
-## System Overview
+##  4. <a name='SystemOverview'></a>System Overview
 
 * receiver
     ```
@@ -187,3 +193,20 @@ python3 src/[package]/src/[executable]
     Publishers:
         /command: msgs/msg/Command
     ```
+
+##  5. <a name='ROSbag'></a>ROS bag
+###  5.1. <a name='Howtorecord'></a>How to record
+```sh
+ros2 bag record -a
+```
+
+###  5.2. <a name='Howtoplay'></a>How to play
+```sh
+ros2 bag play data.bag -l 
+```
+
+##  6. <a name='Rviz'></a>Rviz
+###  6.1. <a name='Howtostart'></a>How to start
+```sh
+rviz2 --display-config src/glove.rviz
+```
