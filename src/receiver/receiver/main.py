@@ -24,8 +24,8 @@ class RawPublisherMaster(Node):
         self.imu_publishers_ = []
         self.mag_publishers_ = []
         for i in range(IMU_NODE_NUM):
-            self.imu_publishers_.append(self.create_publisher(Imu, '/Raw/Imu'+str(i), 10))
-            self.mag_publishers_.append(self.create_publisher(MagneticField, '/Raw/Mag'+str(i), 10))
+            self.imu_publishers_.append(self.create_publisher(Imu, '/Imu'+str(i)+'/Raw', 10))
+            self.mag_publishers_.append(self.create_publisher(MagneticField, '/Imu'+str(i)+'/Mag', 10))
 
     def publish_data(self, data):
         for i in range(IMU_NODE_NUM):
