@@ -5,9 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Imu1
-        - /Imu2
-        - /Imu3
       Splitter Ratio: 0.5
     Tree Height: 647
   - Class: rviz_common/Selection
@@ -62,7 +59,7 @@ Visualization Manager:
         z_scale: 1
       Class: rviz_imu_plugin/Imu
       Enabled: true
-      Name: Imu
+      Name: Imu0
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -89,7 +86,7 @@ Visualization Manager:
         z_scale: 1
       Class: rviz_imu_plugin/Imu
       Enabled: true
-      Name: Imu
+      Name: Imu1
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -116,7 +113,7 @@ Visualization Manager:
         z_scale: 1
       Class: rviz_imu_plugin/Imu
       Enabled: true
-      Name: Imu
+      Name: Imu2
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -130,7 +127,7 @@ Visualization Manager:
       Class: rviz_imu_plugin/Mag
       Color: 255; 0; 0
       Enabled: false
-      Name: Mag
+      Name: Mag0
       Scale: 1
       Topic:
         Depth: 5
@@ -144,7 +141,7 @@ Visualization Manager:
       Class: rviz_imu_plugin/Mag
       Color: 255; 0; 0
       Enabled: false
-      Name: Mag
+      Name: Mag1
       Scale: 1
       Topic:
         Depth: 5
@@ -158,7 +155,7 @@ Visualization Manager:
       Class: rviz_imu_plugin/Mag
       Color: 255; 0; 0
       Enabled: false
-      Name: Mag
+      Name: Mag2
       Scale: 1
       Topic:
         Depth: 5
@@ -272,5 +269,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1143
-  X: 676
-  Y: 20
+  X: 592
+  Y: 22
