@@ -5,10 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
         - /Imu1
         - /Imu2
-        - /TF1
+        - /Imu3
       Splitter Ratio: 0.5
     Tree Height: 647
   - Class: rviz_common/Selection
@@ -96,41 +95,36 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /Imu2
+        Value: /Imu1
       Value: true
       fixed_frame_orientation: true
-    - Class: rviz_default_plugins/TF
+    - Acceleration properties:
+        Acc. vector alpha: 1
+        Acc. vector color: 255; 0; 0
+        Acc. vector scale: 1
+        Derotate acceleration: true
+        Enable acceleration: false
+      Axes properties:
+        Axes scale: 1
+        Enable axes: true
+      Box properties:
+        Box alpha: 1
+        Box color: 255; 0; 0
+        Enable box: false
+        x_scale: 1
+        y_scale: 1
+        z_scale: 1
+      Class: rviz_imu_plugin/Imu
       Enabled: true
-      Frame Timeout: 15
-      Frames:
-        All Enabled: true
-        imu0:
-          Value: true
-        imu0_stf:
-          Value: true
-        imu2:
-          Value: true
-        imu2_stf:
-          Value: true
-        map:
-          Value: true
-      Marker Scale: 3
-      Name: TF
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        map:
-          imu0:
-            {}
-          imu0_stf:
-            {}
-          imu2:
-            {}
-          imu2_stf:
-            {}
-      Update Interval: 0
+      Name: Imu
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /Imu2
       Value: true
+      fixed_frame_orientation: false
     - 2D-visual: false
       Alpha: 1
       Class: rviz_imu_plugin/Mag
@@ -145,11 +139,67 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /Mag_raw0
       Value: false
+    - 2D-visual: true
+      Alpha: 1
+      Class: rviz_imu_plugin/Mag
+      Color: 255; 0; 0
+      Enabled: false
+      Name: Mag
+      Scale: 1
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /Mag_raw1
+      Value: false
+    - 2D-visual: true
+      Alpha: 1
+      Class: rviz_imu_plugin/Mag
+      Color: 255; 0; 0
+      Enabled: false
+      Name: Mag
+      Scale: 1
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /Mag_raw2
+      Value: false
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        imu0:
+          Value: true
+        imu1:
+          Value: true
+        imu2:
+          Value: true
+        palm:
+          Value: true
+      Marker Scale: 2
+      Name: TF
+      Show Arrows: true
+      Show Axes: false
+      Show Names: true
+      Tree:
+        palm:
+          imu0:
+            {}
+          imu1:
+            {}
+          imu2:
+            {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: map
-    Frame Rate: 60
+    Fixed Frame: palm
+    Frame Rate: 30
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact
@@ -203,10 +253,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.22039802372455597
+      Pitch: 0.5253979563713074
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.2753968238830566
+      Yaw: 2.1053967475891113
     Saved: ~
 Window Geometry:
   Displays:
