@@ -8,7 +8,6 @@ def generate_launch_description():
             package='dtf_calculator',
             executable='dtf_calculator',
             parameters=[
-                {'imuName': 'imu_palm'}
             ]
         ),
     ])
