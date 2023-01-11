@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 from glob import glob
 
-package_name = 'transform'
+package_name = 'dtf_calculator'
 
 setup(
     name=package_name,
@@ -24,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'transform = transform.main:main'
+            'dtf_calculator = dtf_calculator.main:main'
         ],
     },
 )
