@@ -10,7 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name, ['launch/launch_master.launch.py']),
+        ('share/' + package_name, ['launch/inference.launch.py', 'launch/label.launch.py', 'launch/train.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -13,7 +13,7 @@
   <test_depend>python3-pytest</test_depend>
   <depend>receiver</depend>
   <depend>imu_filter_madgwick</depend>
-  <depend>dynamic_transform_calculator</depend>
+  <depend>dtf_calculator</depend>
 
   <export>
     <build_type>ament_python</build_type>
