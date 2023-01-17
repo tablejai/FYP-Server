@@ -169,33 +169,19 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        imu0:
-          Value: true
-        imu1:
-          Value: true
-        imu2:
-          Value: true
-        palm:
-          Value: true
       Marker Scale: 2
       Name: TF
       Show Arrows: true
       Show Axes: false
       Show Names: true
       Tree:
-        palm:
-          imu0:
-            {}
-          imu1:
-            {}
-          imu2:
-            {}
+        {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: palm
+    Fixed Frame: imu0
     Frame Rate: 30
   Name: root
   Tools:
@@ -269,5 +255,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 980
-  X: 755
-  Y: 7
+  X: 139
+  Y: 19
