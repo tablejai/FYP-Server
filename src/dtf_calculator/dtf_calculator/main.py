@@ -9,52 +9,18 @@ from sensor_msgs.msg import Imu
 
 import tf_transformations
 import numpy as np
-from math import cos, sin, pi, sqrt, atan2, asin
- 
-def quaternion_rotation_matrix(Q):
-    """
-    Covert a quaternion into a full three-dimensional rotation matrix.
- 
-    Input
-    :param Q: A 4 element array representing the quaternion (q0,q1,q2,q3) 
- 
-    Output
-    :return: A 3x3 element matrix representing the full 3D rotation matrix. 
-             This rotation matrix converts a point in the local reference 
-             frame to a point in the global reference frame.
-    """
-    # Extract the values from Q
-    q0 = Q.x
-    q1 = Q.y
-    q2 = Q.z
-    q3 = Q.w
-     
-    # First row of the rotation matrix
-    r00 = 2 * (q0 * q0 + q1 * q1) - 1
-    r01 = 2 * (q1 * q2 - q0 * q3)
-    r02 = 2 * (q1 * q3 + q0 * q2)
-     
-    # Second row of the rotation matrix
-    r10 = 2 * (q1 * q2 + q0 * q3)
-    r11 = 2 * (q0 * q0 + q2 * q2) - 1
-    r12 = 2 * (q2 * q3 - q0 * q1)
-     
-    # Third row of the rotation matrix
-    r20 = 2 * (q1 * q3 - q0 * q2)
-    r21 = 2 * (q2 * q3 + q0 * q1)
-    r22 = 2 * (q0 * q0 + q3 * q3) - 1
-     
-    # 3x3 rotation matrix
-    rot_matrix = np.array([[r00, r01, r02],
-                           [r10, r11, r12],
-                           [r20, r21, r22]])
-                            
-    return rot_matrix
+from math import cos, sin
 
 class DTF_Calculator(Node):
 
     def __init__(self):
         super().__init__('dtf_calculator')
+
+        # Get the parameters
+        self.declare_parameter('finger_length', 0.15)
+        self.finger_length = self.get_parameter('finger_length').get_parameter_value().double_value
+        self.declare_parameter('use_current_time', False)
+        self.use_current_time = self.get_parameter('use_current_time').get_parameter_value().bool_value
 
         # Initialize the transform broadcaster
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -66,22 +32,22 @@ class DTF_Calculator(Node):
 
         self.ats1 = message_filters.TimeSynchronizer([self.imu_msg_filter_0, self.imu_msg_filter_1], 10)
         self.ats2 = message_filters.TimeSynchronizer([self.imu_msg_filter_0, self.imu_msg_filter_2], 10)
-        self.ats1.registerCallback(self.publish_dtf)
-        self.ats2.registerCallback(self.publish_dtf)
+        self.ats1.registerCallback(self.cal_dtf)
+        self.ats2.registerCallback(self.cal_dtf)
 
-        self.finger_length = 2.0
-
-    # TODO: take origin tf into account
-    def publish_dtf(self, imu_parent, imu_child):
+    def cal_dtf(self, imu_parent, imu_child):
         tf = TransformStamped()
-        tf.header.stamp = imu_parent.header.stamp
+        if self.use_current_time:
+            tf.header.stamp = self.get_clock().now().to_msg()
+        else:
+            tf.header.stamp = imu_parent.header.stamp
         tf.header.frame_id = imu_parent.header.frame_id
         tf.child_frame_id = imu_child.header.frame_id
         
         # rpy from quaternion
         roll, pitch, yaw = tf_transformations.euler_from_quaternion(
-            np.array([imu_parent.orientation.x, imu_parent.orientation.y, imu_parent.orientation.z, imu_parent.orientation.w]) - 
-            np.array([imu_child.orientation.x, imu_child.orientation.y, imu_child.orientation.z, imu_child.orientation.w])
+            np.array([imu_child.orientation.x,  imu_child.orientation.y,  imu_child.orientation.z,  imu_child.orientation.w]) -
+            np.array([imu_parent.orientation.x, imu_parent.orientation.y, imu_parent.orientation.z, imu_parent.orientation.w]) 
         )
 
         # Calculate the rotation matrix from quaternion
