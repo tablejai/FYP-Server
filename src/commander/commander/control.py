@@ -3,10 +3,10 @@ from rclpy.node import Node
 
 from std_msgs.msg import String
 
-class Controller(Node):
+class Commander(Node):
 
     def __init__(self):
-        super().__init__('Controller')
+        super().__init__('Commander')
 
         # Create a subscriber
         self.subscriber = self.create_subscription(String, '/Command', self.callback, 10)
@@ -17,7 +17,7 @@ class Controller(Node):
 
 def main():
     rclpy.init()
-    node = Controller()
+    node = Commander()
     rclpy.spin(node)
 
     node.destroy_node() 
