@@ -36,4 +36,15 @@ def generate_launch_description():
                     get_package_share_directory('commander'),
                     'launch/control.launch.py'))
         ),
+        Node(
+            package="rviz2",
+            executable="rviz2",
+            output="log",
+            arguments=["--display-config", "/home/ubuntu/FYP-ROS/src/glove.rviz"],
+        ),
+        Node(
+            package="rqt_graph",
+            executable="rqt_graph",
+            output="log",
+        ),
     ])
