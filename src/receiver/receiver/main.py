@@ -17,6 +17,10 @@ IMU_NODE_NUM = 3
 app = Flask(__name__)
 rclpy.init()
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 class RawPublisherMaster(Node):
     def __init__(self):
         super().__init__('Receiver')
@@ -40,6 +44,7 @@ class RawPublisherMaster(Node):
             gyro = imu.angular_velocity
             mag = magField.magnetic_field
             print(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
+        print('')
 
 @app.route('/')
 def publish_imu_data():

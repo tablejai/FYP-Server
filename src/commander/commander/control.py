@@ -13,7 +13,7 @@ class Commander(Node):
     
     def callback(self, msg):
         # TODO: call powerpoint api here
-        self.get_logger().info('I heard: "%s"' % msg.data)
+        # self.get_logger().info('I heard: "%s"' % msg.data)
 
 def main():
     rclpy.init()

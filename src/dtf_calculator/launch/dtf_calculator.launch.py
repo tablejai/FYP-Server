@@ -8,7 +8,7 @@ def generate_launch_description():
             package='dtf_calculator',
             executable='dtf_calculator',
             parameters=[
-                {'finger_length': 1.15},
+                {'finger_length': 2.15},
                 {'use_current_time': False},
             ]
         ),
