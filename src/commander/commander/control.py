@@ -14,8 +14,9 @@ class Commander(Node):
     def callback(self, msg):
         # TODO: call powerpoint api here
         # self.get_logger().info('I heard: "%s"' % msg.data)
-
-def main():
+        pass
+        
+def main(args=None):
     rclpy.init()
     node = Commander()
     rclpy.spin(node)
