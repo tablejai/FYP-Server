@@ -16,11 +16,13 @@ class Detector(Node):
         super().__init__('Detector')
 
         # create subscribers
+        self.imu_list = ["/Imu0", "/Imu1", "/Imu2"]
+        
         self.imu_subscribers = []
         self.imu_mag_subscribers = []
-        for i in range(3):
-            self.imu_subscribers.append(message_filters.Subscriber(self, Imu, '/Imu'+str(i)))
-            self.imu_mag_subscribers.append(message_filters.Subscriber(self, MagneticField, '/Imu'+str(i)+'/Mag'))
+        for imu in self.imu_list:
+            self.imu_subscribers.append(message_filters.Subscriber(self, Imu, imu))
+            self.imu_mag_subscribers.append(message_filters.Subscriber(self, MagneticField, imu+'/Mag'))
         
         self.syncer = message_filters.TimeSynchronizer([fs for fs in self.imu_subscribers + self.imu_mag_subscribers], 10)
         self.syncer.registerCallback(self.callback)
