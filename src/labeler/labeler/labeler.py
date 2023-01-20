@@ -47,22 +47,23 @@ class Labeler(Node):
 
     def save_data(self):
         label = input(
-    '''
-[0]SLIDE_UP
-[1]SLIDE_DOWN
-[2]SLIDE_LEFT
-[3]SLIDE_RIGHT
-[4]ZOOM_IN
-[5]ZOOM_OUT
-[6]HIGHTLIGHT
-[7]ON_YES
-[8]OFF_NO
+'''
+[0]STATIC
+[1]SLIDE_UP
+[2]SLIDE_DOWN
+[3]SLIDE_LEFT
+[4]SLIDE_RIGHT
+[5]ZOOM_IN
+[6]ZOOM_OUT
+[7]HIGHLIGHT
+[8]ON_YES
+[9]OFF_NO
 Enter labels: ''').strip().split(" ")
         
         self.data_df = pd.DataFrame(self.data)
-        self.data_df.to_csv(f"{self.data_path}_data", index=False)
+        self.data_df.to_csv(f"{self.data_path}_data.csv", index=False)
         self.label_df = pd.DataFrame({"label": label})
-        self.label_df.to_csv(f"{self.data_path}_label", index=False)
+        self.label_df.to_csv(f"{self.data_path}_label.csv", index=False)
 
         print(f"Saving data and labels to {self.data_path}.")
         print(f"Data length: {len(self.data_df)}")
@@ -91,7 +92,7 @@ def main(args=None):
         exit(1)
 
     BAG_NAME = sys.argv[1]
-    DATA_PATH = f"/home/ubuntu/FYP-ROS/rosbag/data/{BAG_NAME}.csv"
+    DATA_PATH = f"/home/ubuntu/FYP-ROS/rosbag/data/{BAG_NAME}"
 
     labeler = Labeler(DATA_PATH)
     rclpy.spin(labeler)

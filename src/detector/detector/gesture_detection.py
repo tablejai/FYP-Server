@@ -21,7 +21,7 @@ class Detector(Node):
             self.imu_subscribers.append(message_filters.Subscriber(self, Imu, '/Imu'+str(i)))
             self.imu_mag_subscribers.append(message_filters.Subscriber(self, MagneticField, '/Imu'+str(i)+'/Mag'))
         
-        self.syncer = message_filters.ApproximateTimeSynchronizer([fs for fs in self.imu_subscribers + self.imu_mag_subscribers], 10, 0.1)
+        self.syncer = message_filters.TimeSynchronizer([fs for fs in self.imu_subscribers + self.imu_mag_subscribers], 10, 0.1)
         self.syncer.registerCallback(self.callback)
 
         # create a transform listener
@@ -29,10 +29,11 @@ class Detector(Node):
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
         # create a publisher
-        self.command_publisher = self.create_publisher(String, '/Command', 10)
+        self.command_publisher = self.create_publisher(Geasture, '/Geastures', 10)
     
     def callback(self, *args):
-        self.command_publisher.publish(String(data='hello'))
+        pass
+        # self.command_publisher.publish(String(data='hello'))
 
 def main():
     rclpy.init()

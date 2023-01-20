@@ -9,7 +9,7 @@ class Commander(Node):
         super().__init__('Commander')
 
         # Create a subscriber
-        self.subscriber = self.create_subscription(String, '/Command', self.callback, 10)
+        self.subscriber = self.create_subscription(Geasture, '/Geastures', self.callback, 10)
     
     def callback(self, msg):
         # TODO: call powerpoint api here
