@@ -46,8 +46,9 @@ class DTF_Calculator(Node):
         
         # rpy from quaternion
         roll, pitch, yaw = tf_transformations.euler_from_quaternion(
-            np.array([imu_child.orientation.x,  imu_child.orientation.y,  imu_child.orientation.z,  imu_child.orientation.w]) -
-            np.array([imu_parent.orientation.x, imu_parent.orientation.y, imu_parent.orientation.z, imu_parent.orientation.w]) 
+            np.array([imu_child.orientation.w,  imu_child.orientation.x,  imu_child.orientation.y,  imu_child.orientation.z]) -
+            np.array([imu_parent.orientation.w, imu_parent.orientation.x, imu_parent.orientation.y, imu_parent.orientation.z]), 
+            axes='sxyz'
         )
 
         # Calculate the rotation matrix from quaternion

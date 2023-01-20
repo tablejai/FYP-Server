@@ -12,5 +12,12 @@ def generate_launch_description():
                 {'use_current_time': False},
             ]
         ),
+        Node(
+            package="tf2_ros", 
+            executable="static_transform_publisher",
+            name="static_transform_publisher",
+            output="log",
+            arguments=["0", "0", "3", "0", "0", "0", "world", "imu0"]
+        ),
     ])
 

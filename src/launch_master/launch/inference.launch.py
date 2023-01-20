@@ -43,10 +43,10 @@ def generate_launch_description():
             output="log",
             arguments=["--display-config", "/home/ubuntu/FYP-ROS/src/glove.rviz"],
         ),
-        Node(
-            package="rqt_graph",
-            executable="rqt_graph",
-            name="node_graph",
-            output="log",
-        ),
+        # Node(
+        #     package="rqt_graph",
+        #     executable="rqt_graph",
+        #     name="node_graph",
+        #     output="log",
+        # ),
     ])
