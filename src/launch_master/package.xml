@@ -13,6 +13,9 @@
   <test_depend>python3-pytest</test_depend>
   <depend>tf2_ros</depend>
   <depend>receiver</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>msgs</depend>
   <depend>imu_filter_madgwick</depend>
   <depend>dtf_calculator</depend>
   <depend>detector</depend>
