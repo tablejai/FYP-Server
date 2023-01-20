@@ -4,6 +4,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import MagneticField
+from msgs.msg import Geasture
 
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
@@ -21,7 +22,7 @@ class Detector(Node):
             self.imu_subscribers.append(message_filters.Subscriber(self, Imu, '/Imu'+str(i)))
             self.imu_mag_subscribers.append(message_filters.Subscriber(self, MagneticField, '/Imu'+str(i)+'/Mag'))
         
-        self.syncer = message_filters.TimeSynchronizer([fs for fs in self.imu_subscribers + self.imu_mag_subscribers], 10, 0.1)
+        self.syncer = message_filters.TimeSynchronizer([fs for fs in self.imu_subscribers + self.imu_mag_subscribers], 10)
         self.syncer.registerCallback(self.callback)
 
         # create a transform listener
