@@ -1,10 +1,8 @@
 import rclpy
 from rclpy.node import Node
-import tf2_ros
 
-# msg
-import message_filters
-from message_filters import SimpleFilter
+# msg filter
+from message_filters import Subscriber, SimpleFilter, TimeSynchronizer
 
 # msg
 from sensor_msgs.msg import Imu
@@ -39,16 +37,16 @@ class Labeler(Node):
         self.data_path = data_path
 
         # create imu subscribers
-        self.imu_msg_filter0 = message_filters.Subscriber(self, Imu, '/Imu0')
-        self.imu_msg_filter1 = message_filters.Subscriber(self, Imu, '/Imu1')
-        self.imu_msg_filter2 = message_filters.Subscriber(self, Imu, '/Imu2')
-        self.tf_msg_filter1 = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu1')
-        self.tf_msg_filter2 = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu2')
+        self.imu_msg_filter0 = Subscriber(self, Imu, '/Imu0')
+        self.imu_msg_filter1 = Subscriber(self, Imu, '/Imu1')
+        self.imu_msg_filter2 = Subscriber(self, Imu, '/Imu2')
+        self.tf_msg_filter1  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu1')
+        self.tf_msg_filter2  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu2')
         
-        self.syncer = message_filters.TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 10)
-        self.syncer.registerCallback(self.cb)
+        self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 10)
+        self.syncer.registerCallback(self.sync_callback)
 
-        # create label list
+        # create data dict
         self.data = {}
         self.data["timestamp"] = []
         for imu in self.imu_list:
@@ -95,11 +93,11 @@ Enter labels: ''').strip().split(" ")
         self.label_df = pd.DataFrame({"label": label})
         self.label_df.to_csv(f"{self.data_path}_label.csv", index=False)
 
-        print(f"Saving data and labels to {self.data_path}.")
+        print(f"Saving data and labels to {self.data_path}...")
         print(f"Data length: {len(self.data_df)}")
-        print(f"Label length: {label}")
+        print(f"Label: {label}")
 
-    def cb(self, msg0, msg1, msg2, msg3, msg4):
+    def sync_callback(self, msg0, msg1, msg2, msg3, msg4):
         self.data[f"timestamp"].append(msg0.header.stamp.sec + msg0.header.stamp.nanosec*1e-9)
         for imu, msg in zip(self.imu_list, [msg0, msg1, msg2]):
             self.data[f"{imu}_linear_accleration_x"].append(msg.linear_acceleration.x)
