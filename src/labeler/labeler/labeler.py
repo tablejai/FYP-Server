@@ -33,8 +33,10 @@ class Labeler(Node):
     def __init__(self):
         super().__init__('Labeler')
         self.declare_parameter('bag_path')
-        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/{self.get_parameter('bag_path').value}"
+        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/data/{self.get_parameter('bag_path').value}"
+        self.label_path = f"/home/ubuntu/FYP-ROS/rosbag/data/label/{self.get_parameter('bag_path').value}"
         print("data path:", self.data_path)
+        print("label path:", self.label_path)
 
         self.imu_list = ["Imu0", "Imu1", "Imu2"]
         self.tf_list = ["imu0_to_imu1", "imu0_to_imu2"]
@@ -94,9 +96,9 @@ Enter labels: ''').strip().split(" ")
         self.data_df = pd.DataFrame(self.data)
         self.data_df.to_csv(f"{self.data_path}_data.csv", index=False)
         self.label_df = pd.DataFrame({"label": label})
-        self.label_df.to_csv(f"{self.data_path}_label.csv", index=False)
+        self.label_df.to_csv(f"{self.label_path}_label.csv", index=False)
 
-        print(f"Saving data and labels to {self.data_path}...")
+        print(f"Saving data to {self.data_path} and label to {self.label_path}...")
         print(f"Data length: {len(self.data_df)}")
         print(f"Label: {label}")
 
