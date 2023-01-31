@@ -30,11 +30,14 @@ class TfSubscriber(SimpleFilter):
 
 class Labeler(Node):
 
-    def __init__(self, data_path):
+    def __init__(self):
         super().__init__('Labeler')
+        self.declare_parameter('bag_path')
+        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/{self.get_parameter('bag_path').value}"
+        print("data path:", self.data_path)
+
         self.imu_list = ["Imu0", "Imu1", "Imu2"]
         self.tf_list = ["imu0_to_imu1", "imu0_to_imu2"]
-        self.data_path = data_path
 
         # create imu subscribers
         self.imu_msg_filter0 = Subscriber(self, Imu, '/Imu0')
@@ -123,15 +126,7 @@ Enter labels: ''').strip().split(" ")
 def main(args=None):
     rclpy.init(args=args)
 
-    if(len(sys.argv) != 2):
-        print("Please enter bag name")
-        print("Usage: ros2 run labeler labeler <bag_name>")
-        exit(1)
-
-    BAG_NAME = sys.argv[1]
-    DATA_PATH = f"/home/ubuntu/FYP-ROS/rosbag/data/{BAG_NAME}"
-
-    labeler = Labeler(DATA_PATH)
+    labeler = Labeler()
     rclpy.spin(labeler)
 
     labeler.destroy_node()

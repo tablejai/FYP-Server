@@ -13,9 +13,7 @@ class Commander(Node):
         self.subscriber = self.create_subscription(Geasture, '/Geastures', self.callback, 10)
     
     def callback(self, msg):
-        # TODO: call powerpoint api here
-        # self.get_logger().info('I heard: "%s"' % msg.data)
-        pass
+        print("receive:", msg.type)
         
 def main(args=None):
     rclpy.init()
