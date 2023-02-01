@@ -5,6 +5,7 @@ from rclpy.node import Node
 from message_filters import Subscriber, SimpleFilter, TimeSynchronizer
 
 # msg
+from std_msgs.msg import String
 from sensor_msgs.msg import Imu
 from tf2_msgs.msg import TFMessage
 
@@ -32,11 +33,11 @@ class Labeler(Node):
 
     def __init__(self):
         super().__init__('Labeler')
-        self.declare_parameter('bag_path')
-        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/data/{self.get_parameter('bag_path').value}"
-        self.label_path = f"/home/ubuntu/FYP-ROS/rosbag/data/label/{self.get_parameter('bag_path').value}"
-        print("data path:", self.data_path)
-        print("label path:", self.label_path)
+        self.declare_parameter('bag_name')
+        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/data/{self.get_parameter('bag_name').value}"
+        self.label_path = f"/home/ubuntu/FYP-ROS/rosbag/data/label/{self.get_parameter('bag_name').value}"
+        self.get_logger().info(f"data path: {self.data_path}")
+        self.get_logger().info(f"label path: {self.label_path}")
 
         self.imu_list = ["Imu0", "Imu1", "Imu2"]
         self.tf_list = ["imu0_to_imu1", "imu0_to_imu2"]
@@ -50,6 +51,9 @@ class Labeler(Node):
         
         self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 10)
         self.syncer.registerCallback(self.sync_callback)
+
+        # create label listener
+        self.label_sub = self.create_subscription(String, '/User_Label', self.label_callback, 10)
 
         # create data dict
         self.data = {}
@@ -74,12 +78,8 @@ class Labeler(Node):
             self.data[f"{tf}_rotation_z"] = []
             self.data[f"{tf}_rotation_w"] = []
 
-        # create new thread to save data
-        self.thread = threading.Thread(target=self.save_data)
-        self.thread.start()
-
-    def save_data(self):
-        label = input(
+        # log
+        self.get_logger().info(
 '''
 [0]STATIC
 [1]SLIDE_UP
@@ -91,16 +91,20 @@ class Labeler(Node):
 [7]HIGHLIGHT
 [8]ON_YES
 [9]OFF_NO
-Enter labels: ''').strip().split(" ")
+'''
+        )
+
+    def label_callback(self, labels):
+        labels = labels.data.strip().split(" ")
         
         self.data_df = pd.DataFrame(self.data)
         self.data_df.to_csv(f"{self.data_path}_data.csv", index=False)
-        self.label_df = pd.DataFrame({"label": label})
+        self.label_df = pd.DataFrame({"label": labels})
         self.label_df.to_csv(f"{self.label_path}_label.csv", index=False)
 
-        print(f"Saving data to {self.data_path} and label to {self.label_path}...")
-        print(f"Data length: {len(self.data_df)}")
-        print(f"Label: {label}")
+        self.get_logger().info(f"Saving data to {self.data_path} and label to {self.label_path}...")
+        self.get_logger().info(f"Data length: {len(self.data_df)}")
+        self.get_logger().info(f"Label: {labels}")
 
     def sync_callback(self, msg0, msg1, msg2, msg3, msg4):
         self.data[f"timestamp"].append(msg0.header.stamp.sec + msg0.header.stamp.nanosec*1e-9)

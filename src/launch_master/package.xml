@@ -17,9 +17,11 @@
   <depend>std_msgs</depend>
   <depend>msgs</depend>
   <depend>imu_filter_madgwick</depend>
+  <depend>imu_tools</depend>
   <depend>dtf_calculator</depend>
   <depend>detector</depend>
   <depend>commander</depend>
+  <depend>labeler</depend>
 
   <export>
     <build_type>ament_python</build_type>

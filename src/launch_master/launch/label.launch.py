@@ -1,27 +1,34 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-import os
-from ament_index_python import get_package_share_directory
+from launch.actions import TimerAction, ExecuteProcess
 
 def generate_launch_description():
+    bag_name = "rosbag2_2023_01_31-04_21_03"
+    
     return LaunchDescription([
         Node(
-            package='receiver',
-            executable='receiver',
-            output="screen"
+            package='rviz2',
+            executable='rviz2',
+            output="log",
+            arguments=["--display-config", "/home/ubuntu/FYP-ROS/src/glove.rviz"],
         ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(
-                    get_package_share_directory('imu_filter_madgwick'),
-                    'launch/imu_cluster.launch.py'))
+        
+        Node(
+            package='labeler',
+            executable='labeler',
+            output="screen",
+            parameters=[
+                {'bag_name': bag_name}
+            ],
         ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(
-                    get_package_share_directory('dtf_calculator'),
-                    'launch/dtf_calculator.launch.py'))
+
+        TimerAction(
+            period=2.0,
+            actions=[
+                ExecuteProcess(
+                    cmd=['ros2', 'bag', 'play', f"/home/ubuntu/FYP-ROS/rosbag/bag/real_data/{bag_name}"],
+                    output='log'
+                ),
+            ]
         ),
     ])
