@@ -43,8 +43,10 @@ class RawPublisherMaster(Node):
             accel = imu.linear_acceleration
             gyro = imu.angular_velocity
             mag = magField.magnetic_field
-            print(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
-        print('')
+            # print(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
+        # print('')
+
+publisherMaster = RawPublisherMaster()
 
 @app.route('/')
 def publish_imu_data():
@@ -53,9 +55,9 @@ def publish_imu_data():
         request.data = request.data.split(b'\x00')[0]
         content = json.loads(request.data)
         data = []
+        time_ = publisherMaster.get_clock().now().nanoseconds
+        sec, nsec = time_ // 1000000000, time_ % 1000000000
         for i in range(IMU_NODE_NUM):
-            sec = int(content['t_sec'])
-            nsec = int(content['t_nanosec'])
             imu_raw = content["imu"+str(i)]
             accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
             gyro = Vector3(x=float(imu_raw['gx']), y=float(imu_raw['gy']), z=float(imu_raw['gz']))
@@ -75,7 +77,6 @@ def publish_imu_data():
         return "-1"
 
 # keep this order
-publisherMaster = RawPublisherMaster()
 
 app.run(host='0.0.0.0', port=5001, debug=True)
 rclpy.spin(publisherMaster)
