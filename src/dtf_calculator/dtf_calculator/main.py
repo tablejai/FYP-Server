@@ -19,8 +19,6 @@ class DTF_Calculator(Node):
         # Get the parameters
         self.declare_parameter('finger_length', 0.15)
         self.finger_length = self.get_parameter('finger_length').get_parameter_value().double_value
-        self.declare_parameter('use_current_time', False)
-        self.use_current_time = self.get_parameter('use_current_time').get_parameter_value().bool_value
 
         # Initialize the transform broadcaster
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -37,10 +35,7 @@ class DTF_Calculator(Node):
 
     def cal_dtf(self, imu_parent, imu_child):
         tf = TransformStamped()
-        if self.use_current_time:
-            tf.header.stamp = self.get_clock().now().to_msg()
-        else:
-            tf.header.stamp = imu_parent.header.stamp
+        tf.header.stamp = imu_parent.header.stamp
         tf.header.frame_id = imu_parent.header.frame_id
         tf.child_frame_id = imu_child.header.frame_id
         
@@ -58,7 +53,7 @@ class DTF_Calculator(Node):
 
         # Send the transform
         self.tf_broadcaster.sendTransform(tf)
-        print(f"tf {tf.header.frame_id} -> {tf.child_frame_id} sent({tf.transform.translation})")
+        # self.get_logger().info(f"tf @{tf.header.stamp.sec}.{tf.header.stamp.nanosec} {tf.header.frame_id} -> {tf.child_frame_id}")
 
 def main():
     rclpy.init()

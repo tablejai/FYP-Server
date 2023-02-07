@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 
 # msg filter
-from message_filters import Subscriber, SimpleFilter, TimeSynchronizer
+from message_filters import Subscriber, SimpleFilter, TimeSynchronizer, ApproximateTimeSynchronizer
 
 # msg
 from std_msgs.msg import String
@@ -22,7 +22,7 @@ class TfSubscriber(SimpleFilter):
         self.topic = topic 
         self.from_frame = from_frame
         self.to_frame = to_frame
-        self.sub = self.node.create_subscription(self.message_type, self.topic, self.callback, 10)
+        self.sub = self.node.create_subscription(self.message_type, self.topic, self.callback, 100)
 
     def callback(self, msg):
         for tf in msg.transforms:
@@ -49,7 +49,7 @@ class Labeler(Node):
         self.tf_msg_filter1  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu1')
         self.tf_msg_filter2  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu2')
         
-        self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 10)
+        self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 100)
         self.syncer.registerCallback(self.sync_callback)
 
         # create label listener
