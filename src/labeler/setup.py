@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'labeler = labeler.labeler:main',
+            'debug = labeler.debug:main',
         ],
     },
 )

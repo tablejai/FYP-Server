@@ -44,8 +44,9 @@ class RawPublisherMaster(Node):
             accel = imu.linear_acceleration
             gyro = imu.angular_velocity
             mag = magField.magnetic_field
-            self.get_logger().info(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
-
+            # self.get_logger().info(f'Publishing IMU[{i:2d}]: @{stamp.sec:10d},{stamp.nanosec:9d} A[{accel.x:+6.2f}, {accel.y:+6.2f}, {accel.z:+6.2f}] G[{gyro.x:+6.2f}, {gyro.y:+6.2f}, {gyro.z:+6.2f}] M[{mag.x:+6.2f}, {mag.y:+6.2f}, {mag.z:+6.2f}]')
+        self.get_logger().info(f'Received @ {stamp.sec:10d}.{stamp.nanosec:9d}')
+        
 publisherMaster = RawPublisherMaster()
 
 @app.route('/')

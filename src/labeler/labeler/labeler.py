@@ -48,6 +48,12 @@ class Labeler(Node):
         self.imu_msg_filter2 = Subscriber(self, Imu, '/Imu2')
         self.tf_msg_filter1  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu1')
         self.tf_msg_filter2  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu2')
+
+        self.imu_msg_filter0.registerCallback(self.debug_cb, "Imu0")
+        self.imu_msg_filter1.registerCallback(self.debug_cb, "Imu1")
+        self.imu_msg_filter2.registerCallback(self.debug_cb, "Imu2")
+        self.tf_msg_filter1.registerCallback(self.debug_cb, "tf1")
+        self.tf_msg_filter2.registerCallback(self.debug_cb, "tf2")
         
         self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 100)
         self.syncer.registerCallback(self.sync_callback)
@@ -93,6 +99,8 @@ class Labeler(Node):
 [9]OFF_NO
 '''
         )
+    def debug_cb(self, msg, name):
+        self.get_logger().info(f"{name}:\t{msg.header.stamp.sec}.{msg.header.stamp.nanosec}")
 
     def label_callback(self, labels):
         labels = labels.data.strip().split(" ")

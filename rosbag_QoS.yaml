@@ -1,0 +1,12 @@
+/Imu0:
+  history: keep_all
+  reliability: reliable
+/Imu1:
+  history: keep_all
+  reliability: reliable
+/Imu2:
+  history: keep_all
+  reliability: reliable
+/tf:
+  history: keep_all
+  reliability: reliable
