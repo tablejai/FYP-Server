@@ -3,8 +3,8 @@ from launch_ros.actions import Node
 from launch.actions import TimerAction, ExecuteProcess
 
 def generate_launch_description():
-    bag_name = "rosbag2_2023_01_31-04_21_03"
-    
+    bag_name = "rosbag2_2023_02_10-08_23_35"
+
     return LaunchDescription([
         Node(
             package='rviz2',
@@ -18,15 +18,15 @@ def generate_launch_description():
             executable='labeler',
             output="screen",
             parameters=[
-                {'bag_name': bag_name}
+                {'bag_name': bag_name},
             ],
         ),
 
         TimerAction(
-            period=2.0,
+            period=3.0,
             actions=[
                 ExecuteProcess(
-                    cmd=['ros2', 'bag', 'play', f"/home/ubuntu/FYP-ROS/rosbag/bag/real_data/{bag_name}"],
+                    cmd=['ros2', 'bag', 'play', f"/home/ubuntu/FYP-ROS/rosbag/bag/{bag_name}"],
                     output='log'
                 ),
             ]
