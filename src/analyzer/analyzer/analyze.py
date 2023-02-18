@@ -56,6 +56,7 @@ def analyze_gesture():
                 ax.set_ylim([-5, 5])
 
             fig.suptitle(f'{GESTURE[label]}')
+            # plt.savefig(f'{GESTURE[label]}.png')
     plt.show()
 
 def main(args=None):
