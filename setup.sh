@@ -40,7 +40,7 @@ python3 -m pip install transforms3d rosbags
 python3 -m pip install Flask==2.1.2 Flask-Classful==0.14.2 Werkzeug==2.1.2 
 
 # Install pandas
-python3 -m pip install tensorflow pandas pyautogui scikit-learn
+python3 -m pip install tensorflow pandas pyautogui scikit-learn seaborn scipy matplotlib
 
 # reinit rqt
 file="~/.config/ros.org/rqt_gui.ini"
