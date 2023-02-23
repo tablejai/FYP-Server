@@ -36,11 +36,14 @@ sudo apt install\
 # Install ros 3rd party packages
 python3 -m pip install transforms3d rosbags
 
-# Install flask
+# Install server related packages
 python3 -m pip install Flask==2.1.2 Flask-Classful==0.14.2 Werkzeug==2.1.2 
 
-# Install pandas
-python3 -m pip install tensorflow pandas pyautogui scikit-learn seaborn scipy matplotlib
+# Install ml realated packages
+python3 -m pip install tensorflow==2.11.0 pandas scikit-learn seaborn scipy matplotlib
+
+# Install pyautogui
+python3 -m pip install pyautogui
 
 # reinit rqt
 file="~/.config/ros.org/rqt_gui.ini"
