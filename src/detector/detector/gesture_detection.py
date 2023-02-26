@@ -59,10 +59,10 @@ class Detector(Node):
         # load the pretrain lstm model
         self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_26-3_54-acc0.98")
         self.DATA_BUF_LEN = 250
+        self.get_logger().info("model loaded")
 
     def sync_callback(self, *msgs):
         d = {}
-
         for i, msg in enumerate(msgs):
             if i < len(self.imu_list):
                 imu_num = i
