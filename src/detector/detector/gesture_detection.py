@@ -6,38 +6,14 @@ from sensor_msgs.msg import Imu
 from tf2_msgs.msg import TFMessage
 from msgs.msg import Geasture
 
-from tf2_ros.buffer import Buffer
-from tf2_ros.transform_listener import TransformListener
-from message_filters import Subscriber, SimpleFilter, TimeSynchronizer, ApproximateTimeSynchronizer
+from message_filters import Subscriber, TimeSynchronizer
+from utils.tf_subscriber import TfSubscriber
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-
 from tensorflow import keras
-# from tensorflow.keras import layers
-# from tensorflow.keras.preprocessing import sequence
-# from keras.models import Sequential
-# from keras.layers import Activation, Dense, Dropout, LSTM, Softmax, Bidirectional
-# from keras.callbacks import EarlyStopping
-# from sklearn.model_selection import train_test_split
-# from sklearn.metrics import confusion_matrix
-
-class TfSubscriber(SimpleFilter):
-    def __init__(self, node, message_type, topic, from_frame, to_frame):
-        SimpleFilter.__init__(self)
-        self.node = node
-        self.message_type = message_type
-        self.topic = topic 
-        self.from_frame = from_frame
-        self.to_frame = to_frame
-        self.sub = self.node.create_subscription(self.message_type, self.topic, self.callback, 100)
-
-    def callback(self, msg):
-        for tf in msg.transforms:
-            if tf.header.frame_id == self.from_frame and tf.child_frame_id == self.to_frame:
-                self.signalMessage(tf)
 
 class Detector(Node):
     def __init__(self):
