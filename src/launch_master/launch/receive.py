@@ -24,18 +24,6 @@ def generate_launch_description():
                     get_package_share_directory('dtf_calculator'),
                     'launch/dtf_calculator.launch.py'))
         ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(
-                    get_package_share_directory('detector'),
-                    'launch/gesture_detection.launch.py'))
-        ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(
-                    get_package_share_directory('commander'),
-                    'launch/control.launch.py'))
-        ),
         Node(
             package="rviz2",
             executable="rviz2",

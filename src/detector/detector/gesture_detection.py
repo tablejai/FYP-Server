@@ -66,103 +66,59 @@ class Detector(Node):
         # create buffer
         self.data_queue = pd.DataFrame(
             columns=[
-                f"{self.imu_list[0]}_linear_accleration_x",
-                f"{self.imu_list[0]}_linear_accleration_y",
-                f"{self.imu_list[0]}_linear_accleration_z",
-                f"{self.imu_list[0]}_angular_velocity_x",
-                f"{self.imu_list[0]}_angular_velocity_y",
-                f"{self.imu_list[0]}_angular_velocity_z",
-                f"{self.imu_list[0]}_orientation_x",
-                f"{self.imu_list[0]}_orientation_y",
-                f"{self.imu_list[0]}_orientation_z",
-                f"{self.imu_list[0]}_orientation_w",
-                f"{self.imu_list[1]}_linear_accleration_x",
-                f"{self.imu_list[1]}_linear_accleration_y",
-                f"{self.imu_list[1]}_linear_accleration_z",
-                f"{self.imu_list[1]}_angular_velocity_x",
-                f"{self.imu_list[1]}_angular_velocity_y",
-                f"{self.imu_list[1]}_angular_velocity_z",
-                f"{self.imu_list[1]}_orientation_x",
-                f"{self.imu_list[1]}_orientation_y",
-                f"{self.imu_list[1]}_orientation_z",
-                f"{self.imu_list[1]}_orientation_w",
-                f"{self.imu_list[2]}_linear_accleration_x",
-                f"{self.imu_list[2]}_linear_accleration_y",
-                f"{self.imu_list[2]}_linear_accleration_z",
-                f"{self.imu_list[2]}_angular_velocity_x",
-                f"{self.imu_list[2]}_angular_velocity_y",
-                f"{self.imu_list[2]}_angular_velocity_z",
-                f"{self.imu_list[2]}_orientation_x",
-                f"{self.imu_list[2]}_orientation_y",
-                f"{self.imu_list[2]}_orientation_z",
-                f"{self.imu_list[2]}_orientation_w",
-                f"{self.tf_list[0]}_translation_x",
-                f"{self.tf_list[0]}_translation_y",
-                f"{self.tf_list[0]}_translation_z",
-                f"{self.tf_list[1]}_translation_x",
-                f"{self.tf_list[1]}_translation_y",
-                f"{self.tf_list[1]}_translation_z",
+                f"{self.imu_list[0]}_linear_accleration_x", f"{self.imu_list[0]}_linear_accleration_y", f"{self.imu_list[0]}_linear_accleration_z",
+                f"{self.imu_list[0]}_angular_velocity_x", f"{self.imu_list[0]}_angular_velocity_y", f"{self.imu_list[0]}_angular_velocity_z",
+                f"{self.imu_list[0]}_orientation_x", f"{self.imu_list[0]}_orientation_y", f"{self.imu_list[0]}_orientation_z", f"{self.imu_list[0]}_orientation_w",
+                f"{self.imu_list[1]}_linear_accleration_x", f"{self.imu_list[1]}_linear_accleration_y", f"{self.imu_list[1]}_linear_accleration_z",
+                f"{self.imu_list[1]}_angular_velocity_x", f"{self.imu_list[1]}_angular_velocity_y", f"{self.imu_list[1]}_angular_velocity_z",
+                f"{self.imu_list[1]}_orientation_x", f"{self.imu_list[1]}_orientation_y", f"{self.imu_list[1]}_orientation_z", f"{self.imu_list[1]}_orientation_w",
+                f"{self.imu_list[2]}_linear_accleration_x", f"{self.imu_list[2]}_linear_accleration_y", f"{self.imu_list[2]}_linear_accleration_z",
+                f"{self.imu_list[2]}_angular_velocity_x", f"{self.imu_list[2]}_angular_velocity_y", f"{self.imu_list[2]}_angular_velocity_z", 
+                f"{self.imu_list[2]}_orientation_x", f"{self.imu_list[2]}_orientation_y", f"{self.imu_list[2]}_orientation_z", f"{self.imu_list[2]}_orientation_w",
+                f"{self.tf_list[0]}_translation_x", f"{self.tf_list[0]}_translation_y", f"{self.tf_list[0]}_translation_z", 
+                f"{self.tf_list[1]}_translation_x", f"{self.tf_list[1]}_translation_y", f"{self.tf_list[1]}_translation_z",
             ]
         )
     
-        # create lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_26-3_47-acc0.96")
-        self.DATA_BUF_LEN = 500
+        # load the pretrain lstm model
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_26-3_54-acc0.98")
+        self.DATA_BUF_LEN = 250
 
-    def sync_callback(self, imu_msg0, imu_msg1, imu_msg2, tf_msg0, tf_msg1):
-        d = {   
-            # "timestamp": [imu_msg0.header.stamp.sec + imu_msg0.header.stamp.nanosec*1e-9],
-            f"{self.imu_list[0]}_linear_accleration_x": [imu_msg0.linear_acceleration.x],
-            f"{self.imu_list[0]}_linear_accleration_y": [imu_msg0.linear_acceleration.y],
-            f"{self.imu_list[0]}_linear_accleration_z": [imu_msg0.linear_acceleration.z],
-            f"{self.imu_list[0]}_angular_velocity_x": [imu_msg0.angular_velocity.x],
-            f"{self.imu_list[0]}_angular_velocity_y": [imu_msg0.angular_velocity.y],
-            f"{self.imu_list[0]}_angular_velocity_z": [imu_msg0.angular_velocity.z],
-            f"{self.imu_list[0]}_orientation_x": [imu_msg0.orientation.x],
-            f"{self.imu_list[0]}_orientation_y": [imu_msg0.orientation.y],
-            f"{self.imu_list[0]}_orientation_z": [imu_msg0.orientation.z],
-            f"{self.imu_list[0]}_orientation_w": [imu_msg0.orientation.w],
-            f"{self.imu_list[1]}_linear_accleration_x": [imu_msg1.linear_acceleration.x],
-            f"{self.imu_list[1]}_linear_accleration_y": [imu_msg1.linear_acceleration.y],
-            f"{self.imu_list[1]}_linear_accleration_z": [imu_msg1.linear_acceleration.z],
-            f"{self.imu_list[1]}_angular_velocity_x": [imu_msg1.angular_velocity.x],
-            f"{self.imu_list[1]}_angular_velocity_y": [imu_msg1.angular_velocity.y],
-            f"{self.imu_list[1]}_angular_velocity_z": [imu_msg1.angular_velocity.z],
-            f"{self.imu_list[1]}_orientation_x": [imu_msg1.orientation.x],
-            f"{self.imu_list[1]}_orientation_y": [imu_msg1.orientation.y],
-            f"{self.imu_list[1]}_orientation_z": [imu_msg1.orientation.z],
-            f"{self.imu_list[1]}_orientation_w": [imu_msg1.orientation.w],
-            f"{self.imu_list[2]}_linear_accleration_x": [imu_msg2.linear_acceleration.x],
-            f"{self.imu_list[2]}_linear_accleration_y": [imu_msg2.linear_acceleration.y],
-            f"{self.imu_list[2]}_linear_accleration_z": [imu_msg2.linear_acceleration.z],
-            f"{self.imu_list[2]}_angular_velocity_x": [imu_msg2.angular_velocity.x],
-            f"{self.imu_list[2]}_angular_velocity_y": [imu_msg2.angular_velocity.y],
-            f"{self.imu_list[2]}_angular_velocity_z": [imu_msg2.angular_velocity.z],
-            f"{self.imu_list[2]}_orientation_x": [imu_msg2.orientation.x],
-            f"{self.imu_list[2]}_orientation_y": [imu_msg2.orientation.y],
-            f"{self.imu_list[2]}_orientation_z": [imu_msg2.orientation.z],
-            f"{self.imu_list[2]}_orientation_w": [imu_msg2.orientation.w],
-            f"{self.tf_list[0]}_translation_x": [tf_msg0.transform.translation.x],
-            f"{self.tf_list[0]}_translation_y": [tf_msg0.transform.translation.y],
-            f"{self.tf_list[0]}_translation_z": [tf_msg0.transform.translation.z],
-            f"{self.tf_list[1]}_translation_x": [tf_msg1.transform.translation.x],
-            f"{self.tf_list[1]}_translation_y": [tf_msg1.transform.translation.y],
-            f"{self.tf_list[1]}_translation_z": [tf_msg1.transform.translation.z],
-        }
+    def sync_callback(self, *msgs):
+        d = {}
+
+        for i, msg in enumerate(msgs):
+            if i < len(self.imu_list):
+                imu_num = i
+                d[f"{self.imu_list[imu_num]}_linear_accleration_x"] = [msg.linear_acceleration.x]
+                d[f"{self.imu_list[imu_num]}_linear_accleration_y"] = [msg.linear_acceleration.y]
+                d[f"{self.imu_list[imu_num]}_linear_accleration_z"] = [msg.linear_acceleration.z]
+                d[f"{self.imu_list[imu_num]}_angular_velocity_x"] = [msg.angular_velocity.x]
+                d[f"{self.imu_list[imu_num]}_angular_velocity_y"] = [msg.angular_velocity.y]
+                d[f"{self.imu_list[imu_num]}_angular_velocity_z"] = [msg.angular_velocity.z]
+                d[f"{self.imu_list[imu_num]}_orientation_x"] = [msg.orientation.x]
+                d[f"{self.imu_list[imu_num]}_orientation_y"] = [msg.orientation.y]
+                d[f"{self.imu_list[imu_num]}_orientation_z"] = [msg.orientation.z]
+                d[f"{self.imu_list[imu_num]}_orientation_w"] = [msg.orientation.w]
+            elif i < len(self.imu_list) + len(self.tf_list):
+                tf_num = i - len(self.imu_list)
+                d[f"{self.tf_list[tf_num]}_translation_x"] = [msg.transform.translation.x]
+                d[f"{self.tf_list[tf_num]}_translation_y"] = [msg.transform.translation.y]
+                d[f"{self.tf_list[tf_num]}_translation_z"] = [msg.transform.translation.z]
+
         self.data_queue = pd.concat([self.data_queue, pd.DataFrame(data=d)], ignore_index=True)
 
-    
     def inference(self):
-        if len(self.data_queue["Imu0_linear_accleration_x"]) == 0:
+        df_row_cnt = self.data_queue.shape[0]        
+        if df_row_cnt == 0:
             return
 
         # prepare data
         X_data = self.data_queue.to_numpy()
-        if len(self.data_queue["Imu0_linear_accleration_x"]) <  self.DATA_BUF_LEN:
+        if df_row_cnt <  self.DATA_BUF_LEN:
             X_data = np.pad(X_data, ((0,  self.DATA_BUF_LEN - X_data.shape[0]), (0, 0)), 'constant')
         else:
-            X_data = X_data[-1*self.DATA_BUF_LEN:]
-        X_data = X_data.astype(np.float32)
+            X_data = X_data[-1 * self.DATA_BUF_LEN:]
 
         # plot data
         # fig, axs = plt.subplots(3, 6)
@@ -172,29 +128,24 @@ class Detector(Node):
 
         # do prediction
         y_pred = self.model.predict(np.expand_dims(X_data, axis=0))
-        y_lable = np.argmax(y_pred, axis=1)
+        y_label = np.argmax(y_pred, axis=1)[0]
         print(f"{y_pred=}")
-        print(f"prediction: {y_lable[0]} (possibility: {np.max(y_pred, axis=1)[0]})")
+        print(f"prediction: {y_label} (possibility: {np.max(y_pred, axis=1)[0]})")
 
         # publish command
-        if y_lable == Geasture.STATIC:
-            self.command_publisher.publish(Geasture(type=Geasture.STATIC))
-        elif y_lable == Geasture.SLIDE_UP:
-            self.command_publisher.publish(Geasture(type=Geasture.SLIDE_UP))
-        elif y_lable == Geasture.SLIDE_DOWN:
-            self.command_publisher.publish(Geasture(type=Geasture.SLIDE_DOWN))
-        elif y_lable == Geasture.SLIDE_LEFT:
-            self.command_publisher.publish(Geasture(type=Geasture.SLIDE_LEFT))
-        elif y_lable == Geasture.SLIDE_RIGHT:
-            self.command_publisher.publish(Geasture(type=Geasture.SLIDE_RIGHT))
-        elif y_lable == Geasture.ZOOM_IN:
-            self.command_publisher.publish(Geasture(type=Geasture.ZOOM_IN))
-        elif y_lable == Geasture.ZOOM_OUT:
-            self.command_publisher.publish(Geasture(type=Geasture.ZOOM_OUT))
-        elif y_lable == Geasture.NONE:
-            self.command_publisher.publish(Geasture(type=Geasture.NONE))
-        else:
-            pass
+        gestures = {
+            Geasture.STATIC: Geasture(type=Geasture.STATIC),
+            Geasture.SLIDE_UP: Geasture(type=Geasture.SLIDE_UP),
+            Geasture.SLIDE_DOWN: Geasture(type=Geasture.SLIDE_DOWN),
+            Geasture.SLIDE_LEFT: Geasture(type=Geasture.SLIDE_LEFT),
+            Geasture.SLIDE_RIGHT: Geasture(type=Geasture.SLIDE_RIGHT),
+            Geasture.ZOOM_IN: Geasture(type=Geasture.ZOOM_IN),
+            Geasture.ZOOM_OUT: Geasture(type=Geasture.ZOOM_OUT),
+            Geasture.NONE: Geasture(type=Geasture.NONE)
+        }
+        gesture = gestures.get(y_label)
+        if gesture:
+            self.command_publisher.publish(gesture)
 
 def main():
     rclpy.init()
