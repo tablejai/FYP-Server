@@ -31,6 +31,7 @@ sudo apt install\
     python3-colcon-common-extensions\
     ros-foxy-ros2bag\
     ros-foxy-rosbag2-storage-default-plugins\
+    ros-foxy-rviz-imu-plugin\
     -y
 
 # Install ros 3rd party packages

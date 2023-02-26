@@ -41,7 +41,7 @@ def generate_launch_description():
             executable="rviz2",
             name="viz",
             output="log",
-            arguments=["--display-config", "/home/ubuntu/FYP-ROS/src/glove.rviz"],
+            arguments=["--display-config", "src/glove.rviz"],
         ),
         # Node(
         #     package="rqt_graph",

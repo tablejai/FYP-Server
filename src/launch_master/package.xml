@@ -22,6 +22,7 @@
   <depend>detector</depend>
   <depend>commander</depend>
   <depend>labeler</depend>
+  <depend>utils</depend>
 
   <export>
     <build_type>ament_python</build_type>

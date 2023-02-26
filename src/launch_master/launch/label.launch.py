@@ -10,7 +10,7 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             output="log",
-            arguments=["--display-config", "/home/ubuntu/FYP-ROS/src/glove.rviz"],
+            arguments=["--display-config", "src/glove.rviz"],
         ),
         
         Node(
@@ -26,7 +26,7 @@ def generate_launch_description():
             period=3.0,
             actions=[
                 ExecuteProcess(
-                    cmd=['ros2', 'bag', 'play', f"/home/ubuntu/FYP-ROS/rosbag/bag/{bag_name}"],
+                    cmd=['ros2', 'bag', 'play', f"rosbag/bag/{bag_name}"],
                     output='log'
                 ),
             ]
