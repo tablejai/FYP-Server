@@ -8,5 +8,5 @@ uint8 ZOOM_OUT      = 6
 uint8 HIGHLIGHT     = 7
 uint8 ON_YES        = 8
 uint8 OFF_NO        = 9
-uint8 END           = 10
+uint8 NONE          = 10
 uint8 type
