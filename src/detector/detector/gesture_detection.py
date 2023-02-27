@@ -37,7 +37,8 @@ class Detector(Node):
         self.command_publisher = self.create_publisher(Geasture, '/Geastures', 10)
 
         # create a timer to do inferencing
-        self.timer = self.create_timer(2, self.inference)
+        self.infer_timer = self.create_timer(2, self.inference)
+        self.buf_timer = self.create_timer(10, self.clean_buffer)
 
         # create buffer
         self.data_queue = pd.DataFrame(
@@ -85,25 +86,25 @@ class Detector(Node):
         self.data_queue = pd.concat([self.data_queue, pd.DataFrame(data=d)], ignore_index=True)
 
     def inference(self):
-        df_row_cnt = self.data_queue.shape[0]        
-        if df_row_cnt == 0:
+        data_len = self.data_queue.shape[0]        
+        if data_len == 0:
             return
 
         # prepare data
-        X_data = self.data_queue.to_numpy()
-        if df_row_cnt <  self.DATA_BUF_LEN:
-            X_data = np.pad(X_data, ((0,  self.DATA_BUF_LEN - X_data.shape[0]), (0, 0)), 'constant')
+        X = self.data_queue.to_numpy()
+        if data_len <  self.DATA_BUF_LEN:
+            X = np.pad(X, ((0,  self.DATA_BUF_LEN - data_len), (0, 0)), 'constant')
         else:
-            X_data = X_data[-1 * self.DATA_BUF_LEN:]
+            X = X[-1 * self.DATA_BUF_LEN:]
 
         # plot data
         # fig, axs = plt.subplots(3, 6)
-        # axs[0, 0].plot(X_data[:, 1])
-        # axs[0, 1].plot(X_data[:, 2])
-        # axs[0, 2].plot(X_data[:, 3])
+        # axs[0, 0].plot(X[:, 1])
+        # axs[0, 1].plot(X[:, 2])
+        # axs[0, 2].plot(X[:, 3])
 
         # do prediction
-        y_pred = self.model.predict(np.expand_dims(X_data, axis=0))
+        y_pred = self.model.predict(np.expand_dims(X, axis=0))
         y_label = np.argmax(y_pred, axis=1)[0]
         self.get_logger().info(f"{y_pred=}")
         self.get_logger().info(f"prediction: {y_label} (possibility: {np.max(y_pred, axis=1)[0]})")
@@ -122,6 +123,11 @@ class Detector(Node):
         gesture = gestures.get(y_label)
         if gesture:
             self.command_publisher.publish(gesture)
+
+    def clean_buffer(self):
+        data_len = self.data_queue.shape[0]
+        if data_len > self.DATA_BUF_LEN * 1.5:
+            self.data_queue = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
 def main():
     rclpy.init()
