@@ -39,6 +39,8 @@ class Detector(Node):
         # create a timer to do inferencing
         self.infer_timer = self.create_timer(2, self.inference)
         self.buf_timer = self.create_timer(10, self.clean_buffer)
+        self.plt_timer = self.create_timer(0.3, self.plot_buffer)
+        # self.fig, self.ax = plt.subplots(6, 3)
 
         # create buffer
         self.data_queue = pd.DataFrame(
@@ -87,22 +89,17 @@ class Detector(Node):
 
     def inference(self):
         data_len = self.data_queue.shape[0]        
+        print(f"{data_len=}")
         if data_len == 0:
             return
 
         # prepare data
         X = self.data_queue.to_numpy()
-        if data_len <  self.DATA_BUF_LEN:
+        if data_len < self.DATA_BUF_LEN:
             X = np.pad(X, ((0,  self.DATA_BUF_LEN - data_len), (0, 0)), 'constant')
         else:
             X = X[-1 * self.DATA_BUF_LEN:]
-
-        # plot data
-        # fig, axs = plt.subplots(3, 6)
-        # axs[0, 0].plot(X[:, 1])
-        # axs[0, 1].plot(X[:, 2])
-        # axs[0, 2].plot(X[:, 3])
-
+        
         # do prediction
         y_pred = self.model.predict(np.expand_dims(X, axis=0))
         y_label = np.argmax(y_pred, axis=1)[0]
@@ -129,9 +126,52 @@ class Detector(Node):
         if data_len > self.DATA_BUF_LEN * 1.5:
             self.data_queue = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
+    def plot_buffer(self):
+        X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
+
+        fig = plt.figure(1, figsize=(20, 10))
+        fig.clf()
+
+        for i in range(0, len(self.imu_list)):
+            plt.subplot(3, 6, 6 * i + 1)
+            plt.plot(X[f"{self.imu_list[i]}_linear_accleration_x"], 'r')
+            plt.xlabel('Linear Acceleration X')
+            plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+            # plt.subplot(3, 6, 6 * i + 2)
+            # plt.plot(X[f"{self.imu_list[i]}_linear_accleration_y"], 'g')
+            # plt.xlabel('Linear Acceleration Y')
+            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+            # plt.subplot(3, 6, 6 * i + 3)
+            # plt.plot(X[f"{self.imu_list[i]}_linear_accleration_z"], 'b')
+            # plt.xlabel('Linear Acceleration Z')
+            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+            # plt.subplot(3, 6, 6 * i + 4)
+            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_x"], 'r')
+            # plt.xlabel('Angular Velocity X')
+            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+            # plt.subplot(3, 6, 6 * i + 5)
+            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_y"], 'g')
+            # plt.xlabel('Angular Velocity Y')
+            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+            # plt.subplot(3, 6, 6 * i + 6)
+            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_z"], 'b')
+            # plt.xlabel('Angular Velocity Z')
+            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+        plt.draw()
+        plt.pause(0.00000000001)
+        
 def main():
     rclpy.init()
     node = Detector()
+
+    plt.ion()
+    plt.show()
     rclpy.spin(node)
 
     node.destroy_node() 
