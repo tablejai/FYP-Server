@@ -130,38 +130,27 @@ class Detector(Node):
         X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
         fig = plt.figure(1, figsize=(20, 10))
-        fig.clf()
-
+        # fig.clf()
         for i in range(0, len(self.imu_list)):
-            plt.subplot(3, 6, 6 * i + 1)
-            plt.plot(X[f"{self.imu_list[i]}_linear_accleration_x"], 'r')
-            plt.xlabel('Linear Acceleration X')
-            plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+            ax1 = plt.subplot(3, 6, 6 * i + 1)
+            ax2 = plt.subplot(3, 6, 6 * i + 2)
+            ax3 = plt.subplot(3, 6, 6 * i + 3)
+            ax4 = plt.subplot(3, 6, 6 * i + 4)
+            ax5 = plt.subplot(3, 6, 6 * i + 5)
+            ax6 = plt.subplot(3, 6, 6 * i + 6)
 
-            # plt.subplot(3, 6, 6 * i + 2)
-            # plt.plot(X[f"{self.imu_list[i]}_linear_accleration_y"], 'g')
-            # plt.xlabel('Linear Acceleration Y')
-            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
-
-            # plt.subplot(3, 6, 6 * i + 3)
-            # plt.plot(X[f"{self.imu_list[i]}_linear_accleration_z"], 'b')
-            # plt.xlabel('Linear Acceleration Z')
-            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
-
-            # plt.subplot(3, 6, 6 * i + 4)
-            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_x"], 'r')
-            # plt.xlabel('Angular Velocity X')
-            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
-
-            # plt.subplot(3, 6, 6 * i + 5)
-            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_y"], 'g')
-            # plt.xlabel('Angular Velocity Y')
-            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
-
-            # plt.subplot(3, 6, 6 * i + 6)
-            # plt.plot(X[f"{self.imu_list[i]}_angular_velocity_z"], 'b')
-            # plt.xlabel('Angular Velocity Z')
-            # plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+            ax1.plot(X[f"{self.imu_list[i]}_linear_accleration_x"], 'r')
+            ax2.plot(X[f"{self.imu_list[i]}_linear_accleration_y"], 'g')
+            ax3.plot(X[f"{self.imu_list[i]}_linear_accleration_z"], 'b')
+            ax4.plot(X[f"{self.imu_list[i]}_angular_velocity_x"], 'r')
+            ax5.plot(X[f"{self.imu_list[i]}_angular_velocity_y"], 'g')
+            ax6.plot(X[f"{self.imu_list[i]}_angular_velocity_z"], 'b')
+            # line1.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_x"])
+            # line2.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_y"])
+            # line3.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_z"])
+            # line4.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_x"])
+            # line5.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_y"])
+            # line6.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_z"])
 
         plt.draw()
         plt.pause(0.00000000001)
