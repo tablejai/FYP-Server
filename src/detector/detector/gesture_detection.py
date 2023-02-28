@@ -58,7 +58,7 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_26-3_54-acc0.98")
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_28-7_1-acc0.96")
         self.DATA_BUF_LEN = 250
         self.get_logger().info("model loaded")
 
