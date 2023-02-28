@@ -107,7 +107,7 @@ class Detector(Node):
         y_pred = self.model.predict(np.expand_dims(X, axis=0))
         y_label = np.argmax(y_pred, axis=1)[0]
         self.get_logger().info(f"{y_pred=}")
-        self.get_logger().info(f"prediction: {y_label} (possibility: {np.max(y_pred, axis=1)[0]})")
+        self.get_logger().info(f"prediction: {y_label} (probability: {np.max(y_pred, axis=1)[0]})")
 
         # publish command
         gestures = {

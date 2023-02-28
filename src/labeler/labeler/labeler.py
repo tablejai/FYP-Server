@@ -36,11 +36,11 @@ class Labeler(Node):
         self.tf_msg_filter1  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu1')
         self.tf_msg_filter2  = TfSubscriber(self, TFMessage, '/tf', from_frame='imu0', to_frame='imu2')
 
-        self.imu_msg_filter0.registerCallback(self.debug_cb, "Imu0")
-        self.imu_msg_filter1.registerCallback(self.debug_cb, "Imu1")
-        self.imu_msg_filter2.registerCallback(self.debug_cb, "Imu2")
-        self.tf_msg_filter1.registerCallback(self.debug_cb, "tf1")
-        self.tf_msg_filter2.registerCallback(self.debug_cb, "tf2")
+        # self.imu_msg_filter0.registerCallback(self.debug_cb, "Imu0")
+        # self.imu_msg_filter1.registerCallback(self.debug_cb, "Imu1")
+        # self.imu_msg_filter2.registerCallback(self.debug_cb, "Imu2")
+        # self.tf_msg_filter1.registerCallback(self.debug_cb, "tf1")
+        # self.tf_msg_filter2.registerCallback(self.debug_cb, "tf2")
         
         self.syncer = TimeSynchronizer([self.imu_msg_filter0, self.imu_msg_filter1, self.imu_msg_filter2, self.tf_msg_filter1, self.tf_msg_filter2], 100)
         self.syncer.registerCallback(self.sync_callback)
