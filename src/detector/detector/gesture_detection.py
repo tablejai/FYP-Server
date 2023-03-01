@@ -89,7 +89,6 @@ class Detector(Node):
 
     def inference(self):
         data_len = self.data_queue.shape[0]        
-        print(f"{data_len=}")
         if data_len == 0:
             return
 
@@ -127,30 +126,25 @@ class Detector(Node):
             self.data_queue = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
     def plot_buffer(self):
-        X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
+        X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:].to_numpy()
 
-        fig = plt.figure(1, figsize=(20, 10))
-        # fig.clf()
-        for i in range(0, len(self.imu_list)):
-            ax1 = plt.subplot(3, 6, 6 * i + 1)
-            ax2 = plt.subplot(3, 6, 6 * i + 2)
-            ax3 = plt.subplot(3, 6, 6 * i + 3)
-            ax4 = plt.subplot(3, 6, 6 * i + 4)
-            ax5 = plt.subplot(3, 6, 6 * i + 5)
-            ax6 = plt.subplot(3, 6, 6 * i + 6)
+        fig = plt.figure(1)
+        fig.clf()
 
-            ax1.plot(X[f"{self.imu_list[i]}_linear_accleration_x"], 'r')
-            ax2.plot(X[f"{self.imu_list[i]}_linear_accleration_y"], 'g')
-            ax3.plot(X[f"{self.imu_list[i]}_linear_accleration_z"], 'b')
-            ax4.plot(X[f"{self.imu_list[i]}_angular_velocity_x"], 'r')
-            ax5.plot(X[f"{self.imu_list[i]}_angular_velocity_y"], 'g')
-            ax6.plot(X[f"{self.imu_list[i]}_angular_velocity_z"], 'b')
-            # line1.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_x"])
-            # line2.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_y"])
-            # line3.set_data(range(len(X)), X[f"{self.imu_list[i]}_linear_accleration_z"])
-            # line4.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_x"])
-            # line5.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_y"])
-            # line6.set_data(range(len(X)), X[f"{self.imu_list[i]}_angular_velocity_z"])
+        plt.subplot(3, 1, 1)
+        plt.plot(X[:, 1], 'r')
+        plt.xlabel('Linear Acceleration X')
+        plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+        plt.subplot(3, 1, 2)
+        plt.plot(X[:, 2], 'r')
+        plt.xlabel('Linear Acceleration X')
+        plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+
+        plt.subplot(3, 1, 3)
+        plt.plot(X[:, 3], 'r')
+        plt.xlabel('Linear Acceleration X')
+        plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
 
         plt.draw()
         plt.pause(0.00000000001)
