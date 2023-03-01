@@ -60,8 +60,8 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_2_28-7_1-acc0.96")
-        self.DATA_BUF_LEN = 250
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_1-9_18-acc0.95")
+        self.DATA_BUF_LEN = 100
         self.get_logger().info("model loaded")
 
     def sync_callback(self, *msgs):
@@ -95,13 +95,15 @@ class Detector(Node):
         # prepare data
         X = self.data_queue.to_numpy()
         if data_len < self.DATA_BUF_LEN:
-            X = np.pad(X, ((0,  self.DATA_BUF_LEN - data_len), (0, 0)), 'constant')
+            last_row = np.repeat([X[-1]], repeats=self.DATA_BUF_LEN-data_len, axis=0)
+            X = np.vstack([X, last_row])
         else:
             X = X[-1 * self.DATA_BUF_LEN:]
         
         # do prediction
         y_pred = self.model.predict(np.expand_dims(X, axis=0))
         y_label = np.argmax(y_pred, axis=1)[0]
+        probability = np.max(y_pred, axis=1)[0]
         self.get_logger().info(f"{y_pred=}")
         self.get_logger().info(f"prediction: {y_label} (probability: {np.max(y_pred, axis=1)[0]})")
 
@@ -117,7 +119,7 @@ class Detector(Node):
             Geasture.NONE: Geasture(type=Geasture.NONE)
         }
         gesture = gestures.get(y_label)
-        if gesture:
+        if gesture and probability > 0.99:
             self.command_publisher.publish(gesture)
 
     def clean_buffer(self):

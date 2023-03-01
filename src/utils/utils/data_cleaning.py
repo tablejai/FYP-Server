@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
-file_name = 'rosbag2_2023_02_10-07_53_32'
+file_name = 'rosbag2_2023_02_11-10_27_06'
 df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
 
-template_file_name = 'rosbag2_2023_02_10-07_49_15'
-df2 = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{template_file_name}_data.csv')
+gesture_model_file_name = 'rosbag2_2023_02_10-08_20_28'
+df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{gesture_model_file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
@@ -15,8 +15,8 @@ acc_axes = axs[:, :3].ravel()
 vel_axes = axs[:, 3:].ravel()
 acc_data = [df[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_data = [df[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
-acc_data2 = [df2[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
-vel_data2 = [df2[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+acc_data_model = [df_gesture_model[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+vel_data_model = [df_gesture_model[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 acc_titles = [f'Imu{i}_acc_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_titles = [f'Imu{i}_vel_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
 
@@ -85,15 +85,15 @@ fig.canvas.mpl_connect('key_press_event', lambda event: [close_plt_and_save(even
 
 cid = fig.canvas.mpl_connect('button_press_event', mouse_event)
 
-for ax, data, data2, title in zip(acc_axes, acc_data, acc_data2, acc_titles):
+for ax, data, data_model, title in zip(acc_axes, acc_data, acc_data_model, acc_titles):
     ax.plot(df.index, data)
-    ax.plot(df2.index, data2, color='gray', alpha=0.35)
+    ax.plot(df_gesture_model.index, data_model, color='gray', alpha=0.35)
     ax.set_title(title)
     ax.set_ylim([-1.5 * 9.8, 1.5 * 9.8])
 
-for ax, data, data2, title in zip(vel_axes, vel_data, vel_data2, vel_titles):
+for ax, data, data_model, title in zip(vel_axes, vel_data, vel_data_model, vel_titles):
     ax.plot(df.index, data)
-    ax.plot(df2.index, data2, color='gray', alpha=0.35)
+    ax.plot(df_gesture_model.index, data_model, color='gray', alpha=0.35)
     ax.set_title(title)
     ax.set_ylim([-5, 5])
 
