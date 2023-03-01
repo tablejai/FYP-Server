@@ -3,8 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
-file_name = 'rosbag2_2023_02_10-06_48_16' 
+file_name = 'rosbag2_2023_02_10-07_53_32'
 df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
+
+template_file_name = 'rosbag2_2023_02_10-07_49_15'
+df2 = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{template_file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
@@ -12,6 +15,8 @@ acc_axes = axs[:, :3].ravel()
 vel_axes = axs[:, 3:].ravel()
 acc_data = [df[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_data = [df[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+acc_data2 = [df2[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+vel_data2 = [df2[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 acc_titles = [f'Imu{i}_acc_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_titles = [f'Imu{i}_vel_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
 
@@ -24,6 +29,9 @@ last_text = None
 
 start_index = 0
 end_index = 0
+
+last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_index})/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
+plt.draw()
 
 def mouse_event(event):
     # Get the start and end x
@@ -77,13 +85,15 @@ fig.canvas.mpl_connect('key_press_event', lambda event: [close_plt_and_save(even
 
 cid = fig.canvas.mpl_connect('button_press_event', mouse_event)
 
-for ax, data, title in zip(acc_axes, acc_data, acc_titles):
+for ax, data, data2, title in zip(acc_axes, acc_data, acc_data2, acc_titles):
     ax.plot(df.index, data)
+    ax.plot(df2.index, data2, color='gray', alpha=0.35)
     ax.set_title(title)
     ax.set_ylim([-1.5 * 9.8, 1.5 * 9.8])
 
-for ax, data, title in zip(vel_axes, vel_data, vel_titles):
+for ax, data, data2, title in zip(vel_axes, vel_data, vel_data2, vel_titles):
     ax.plot(df.index, data)
+    ax.plot(df2.index, data2, color='gray', alpha=0.35)
     ax.set_title(title)
     ax.set_ylim([-5, 5])
 
