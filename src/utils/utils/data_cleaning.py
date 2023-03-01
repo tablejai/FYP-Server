@@ -71,7 +71,7 @@ def close_plt_and_save(event):
     global start_index
     global end_index
     # Save the cropped data
-    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_cropped/{file_name}_data.csv', index=False)
+    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{file_name}_data.csv', index=False)
     plt.close()
     print("Saved and closed")
 
