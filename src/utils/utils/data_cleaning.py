@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
 
-file_name = 'rosbag2_2023_02_11-09_09_53_data' 
-df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}.csv')
+file_name = 'rosbag2_2023_02_10-06_48_16' 
+df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
@@ -21,11 +22,16 @@ last_left_x_grp = [None] * 18
 last_right_x_grp = [None] * 18
 last_text = None
 
+start_index = 0
+end_index = 0
+
 def mouse_event(event):
     # Get the start and end x
     if event.xdata is None:
         return
     print(f'x: {event.xdata} and y: {event.ydata}')
+    global start_index
+    global end_index
     start_index = int(event.xdata)
     end_index = min(start_index + 100, len(df))
 
@@ -50,11 +56,24 @@ def mouse_event(event):
         last_left_x_grp[i] = ax.plot(left_x, y, linestyle="dashed", color="red")
         last_right_x_grp[i] = ax.plot(right_x, y, linestyle="dashed", color="green")
     
-    last_text = fig.text(.97, .97, f'{start_index}-{end_index}/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
+    last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_index})/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
     plt.draw()
 
+def close_plt_and_save(event):
+    global start_index
+    global end_index
     # Save the cropped data
-    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_cropped/{file_name}.csv', index=False)
+    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_cropped/{file_name}_data.csv', index=False)
+    plt.close()
+    print("Saved and closed")
+
+# Add the save and quit button
+btn_ax = fig.add_axes([0.9, 0.05, 0.07, 0.045])
+bnext = Button(btn_ax, 'Save and Quit')
+bnext.on_clicked(close_plt_and_save)
+
+# bind enter key to save and quit
+fig.canvas.mpl_connect('key_press_event', lambda event: [close_plt_and_save(event)] if event.key == 'enter' else [])
 
 cid = fig.canvas.mpl_connect('button_press_event', mouse_event)
 
@@ -69,3 +88,5 @@ for ax, data, title in zip(vel_axes, vel_data, vel_titles):
     ax.set_ylim([-5, 5])
 
 plt.show()
+print(f'{file_name}')
+print(f'{start_index}-{end_index}({end_index-start_index})/{len(df)}')
