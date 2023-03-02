@@ -37,9 +37,10 @@ class Detector(Node):
         self.command_publisher = self.create_publisher(Geasture, '/Geastures', 10)
 
         # create a timer to do inferencing
-        self.infer_timer = self.create_timer(2, self.inference)
+        infer_interval = 0.8
+        self.infer_timer = self.create_timer(infer_interval, self.inference)
         self.buf_timer = self.create_timer(10, self.clean_buffer)
-        self.plt_timer = self.create_timer(0.3, self.plot_buffer)
+        self.plt_timer = self.create_timer(infer_interval, self.plot_buffer)
         # self.fig, self.ax = plt.subplots(6, 3)
 
         # create buffer
@@ -60,7 +61,7 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_1-9_18-acc0.95")
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_2-14_22-acc0.96")
         self.DATA_BUF_LEN = 100
         self.get_logger().info("model loaded")
 
@@ -119,7 +120,7 @@ class Detector(Node):
             Geasture.NONE: Geasture(type=Geasture.NONE)
         }
         gesture = gestures.get(y_label)
-        if gesture and probability > 0.99:
+        if gesture and probability > 0.98:
             self.command_publisher.publish(gesture)
 
     def clean_buffer(self):
