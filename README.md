@@ -11,28 +11,28 @@ Rqt_graph
 ![Untitled](./res/ros_flow.png)
 
 - Receiver
-    Input: NA
-    Output: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
+    - Input: NA
+    - Output: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
 
 - Filter
-    Input: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
-    Output: /Imu0, /Imu1, /Imu2
+    - Input: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
+    - Output: /Imu0, /Imu1, /Imu2
 
 - Dtf_calculator
-    Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw
-    Output: /tf
+    - Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw
+    - Output: /tf
 
 - Detector
-    Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw, /tf
-    Output: /Command
+    - Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw, /tf
+    - Output: /Command
 
 - Commander
-    Input: /Command
-    Output: NA
+    - Input: /Command
+    - Output: NA
 
 - Labeler
-    Input: /Imu0, /Imu1, /Imu2, /tf
-    Output: /User_Label
+    - Input: /Imu0, /Imu1, /Imu2, /tf
+    - Output: /User_Label
 
 ## CLI
 
