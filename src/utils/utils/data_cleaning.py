@@ -34,8 +34,6 @@ last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_inde
 plt.draw()
 
 def draw_interval(start_index, end_index):
-    start_index = 0
-    end_index = len(df)
     for i, ax in enumerate(axs.ravel()):
         left_x = [start_index] * 2
         right_x = [int(end_index)] * 2
@@ -102,7 +100,7 @@ for ax, data, data_model, title in zip(vel_axes, vel_data, vel_data_model, vel_t
     ax.set_title(title)
     ax.set_ylim([-5, 5])
 
-if len(df) < 100:
+if len(df) <= 100:
     start_index = 0
     end_index = len(df)
     draw_interval(start_index, end_index)
