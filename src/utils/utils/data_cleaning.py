@@ -33,6 +33,17 @@ end_index = 0
 last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_index})/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
 plt.draw()
 
+def draw_interval(start_index, end_index):
+    start_index = 0
+    end_index = len(df)
+    for i, ax in enumerate(axs.ravel()):
+        left_x = [start_index] * 2
+        right_x = [int(end_index)] * 2
+        y = np.linspace(-1.5*9.8, 1.5*9.8, 2)
+        last_left_x_grp[i] = ax.plot(left_x, y, linestyle="dashed", color="red")
+        last_right_x_grp[i] = ax.plot(right_x, y, linestyle="dashed", color="green")
+    plt.draw()
+
 def mouse_event(event):
     # Get the start and end x
     if event.xdata is None:
@@ -40,7 +51,7 @@ def mouse_event(event):
     print(f'x: {event.xdata} and y: {event.ydata}')
     global start_index
     global end_index
-    start_index = int(event.xdata)
+    start_index = max(int(event.xdata), 0)
     end_index = min(start_index + 100, len(df))
 
     # Remove the last drawn lines
@@ -56,16 +67,8 @@ def mouse_event(event):
     if last_text is not None:
         last_text.remove()
 
-    # Draw the new lines
-    for i, ax in enumerate(axs.ravel()):
-        left_x = [start_index] * 2
-        right_x = [int(end_index)] * 2
-        y = np.linspace(-1.5*9.8, 1.5*9.8, 2)
-        last_left_x_grp[i] = ax.plot(left_x, y, linestyle="dashed", color="red")
-        last_right_x_grp[i] = ax.plot(right_x, y, linestyle="dashed", color="green")
-    
+    draw_interval(start_index, end_index)
     last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_index})/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
-    plt.draw()
 
 def close_plt_and_save(event):
     global start_index
@@ -74,6 +77,8 @@ def close_plt_and_save(event):
     df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{file_name}_data.csv', index=False)
     plt.close()
     print("Saved and closed")
+
+
 
 # Add the save and quit button
 btn_ax = fig.add_axes([0.9, 0.05, 0.07, 0.045])
@@ -97,6 +102,12 @@ for ax, data, data_model, title in zip(vel_axes, vel_data, vel_data_model, vel_t
     ax.set_title(title)
     ax.set_ylim([-5, 5])
 
+if len(df) < 100:
+    start_index = 0
+    end_index = len(df)
+    draw_interval(start_index, end_index)
+
 plt.show()
+
 print(f'{file_name}')
 print(f'{start_index}-{end_index}({end_index-start_index})/{len(df)}')
