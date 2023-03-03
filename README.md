@@ -10,35 +10,29 @@ Rqt_graph
 
 ![Untitled](./res/ros_flow.png)
 
-Receiver
+- Receiver
+    Input: NA
+    Output: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
 
-Input: NA
+- Filter
+    Input: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
+    Output: /Imu0, /Imu1, /Imu2
 
-Output: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
+- Dtf_calculator
+    Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw
+    Output: /tf
 
-Filter
+- Detector
+    Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw, /tf
+    Output: /Command
 
-Input: /Imu0/Raw, /Imu0/Mag, /Imu1/Raw, /Imu1/Mag, /Imu2/Raw, /Imu2/Mag
+- Commander
+    Input: /Command
+    Output: NA
 
-Output: /Imu0, /Imu1, /Imu2
-
-Dtf_calculator
-
-Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw
-
-Output: /tf
-
-Detector
-
-Input: /Imu0/Raw, /Imu1/Raw, /Imu2/Raw, /tf
-
-Output: /Command
-
-Commander
-
-Input: /Command
-
-Output: NA
+- Labeler
+    Input: /Imu0, /Imu1, /Imu2, /tf
+    Output: /User_Label
 
 ## CLI
 
@@ -60,7 +54,6 @@ source install/setup.bash
 ```
 
 > please do `source install/setup.bash` before running any own-made package
-> 
 
 ### Create a package
 
@@ -72,11 +65,9 @@ ros2 pkg create --build-type ament_cmake [package]
 ros2 pkg create --build-type ament_python [package]
 ```
 
-More about creating and configuring the package
-
+More about creating and configuring the package:
 1. Write your python code under [package]/[package]/[package.py]
 2. Add an entry point to setup.py so that ros2 can locate its position
-    
     ```python
     entry_points={
         'console_scripts': [
@@ -85,12 +76,10 @@ More about creating and configuring the package
     }
     ```
     
-    - Create a Python package
-        
+    Create a Python package:
         [Writing a simple publisher and subscriber (Python) - ROS 2 Documentation: Foxy documentation](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html)
         
-    - Entry Point For Python
-        
+    Entry Point For Python:
         [Developing a ROS 2 package - ROS 2 Documentation: Foxy documentation](https://docs.ros.org/en/foxy/How-To-Guides/Developing-a-ROS-2-Package.html#python-packages)
         
 
