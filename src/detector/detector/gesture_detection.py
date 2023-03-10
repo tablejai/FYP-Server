@@ -37,7 +37,7 @@ class Detector(Node):
         self.command_publisher = self.create_publisher(Geasture, '/Geastures', 10)
 
         # create a timer to do inferencing
-        infer_interval = 0.8
+        infer_interval = 0.5
         self.infer_timer = self.create_timer(infer_interval, self.inference)
         self.buf_timer = self.create_timer(10, self.clean_buffer)
         self.plt_timer = self.create_timer(infer_interval, self.plot_buffer)
@@ -61,7 +61,7 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_3-11_22-acc1.00")
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_10-11_22-acc0.94")
         self.DATA_BUF_LEN = 100
         self.get_logger().info("model loaded")
 
@@ -115,8 +115,8 @@ class Detector(Node):
             Geasture.SLIDE_DOWN: Geasture(type=Geasture.SLIDE_DOWN),
             Geasture.SLIDE_LEFT: Geasture(type=Geasture.SLIDE_LEFT),
             Geasture.SLIDE_RIGHT: Geasture(type=Geasture.SLIDE_RIGHT),
-            Geasture.ZOOM_IN: Geasture(type=Geasture.ZOOM_IN),
-            Geasture.ZOOM_OUT: Geasture(type=Geasture.ZOOM_OUT),
+            Geasture.RELEASE: Geasture(type=Geasture.RELEASE),
+            Geasture.GRASP: Geasture(type=Geasture.GRASP),
             Geasture.NONE: Geasture(type=Geasture.NONE)
         }
         gesture = gestures.get(y_label)
