@@ -39,14 +39,14 @@ plot_data(vel_axes, vel_data1, vel_titles, 'green')
 fig.legend([f'{file_path1}'])
 
 # Define the function to update the plot
-plot_index = 1
+plot_index = 0
 lines = []
-def next_plot(event):
+def switch_plot(event):
     global file_path1
     global plot_index
     global lines
     
-    if event.key != 'enter':
+    if event.key != 'up' and event.key != 'down' and event.key != 'left' and event.key != 'right':
         return
     
     # Remove the reference lines
@@ -55,6 +55,11 @@ def next_plot(event):
     lines = []
     
     # Plot the next data
+    if event.key == 'up' or event.key == 'left':
+        plot_index -= 1
+    elif event.key == 'down' or event.key == 'right':
+        plot_index += 1
+
     file_path2 = target_data[plot_index]
     raw_data2 = pd.read_csv(f'./rosbag/data/data_clean/{file_path2}_data.csv')
     raw_data2['timestamp'] = raw_data2['timestamp'] - raw_data2['timestamp'][0]
@@ -64,11 +69,11 @@ def next_plot(event):
 
     lines = plot_data(acc_axes, acc_data2, acc_titles, "red", linestyle="dashed")
     lines += plot_data(vel_axes, vel_data2, vel_titles, "red", linestyle="dashed")
-    plot_index +=1
+    
 
     fig.legend([f'{file_path1}', f'{file_path2}'])
     fig.suptitle(f'Compare({target_gesture}): {file_path1} <-> {file_path2} ')
     plt.draw()
 
-plt.connect('key_press_event', next_plot)
+plt.connect('key_press_event', switch_plot)
 plt.show()
