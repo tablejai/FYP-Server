@@ -21,9 +21,9 @@ colors_palette = {
     "NONE": "#3288bd",
 }
 
-def load_data():
+def load_data(filepath='/home/ubuntu/FYP-ROS/rosbag/bag/info.txt'):
     dataset = {}
-    with open('/home/ubuntu/FYP-ROS/rosbag/bag/info.txt', 'r') as f:
+    with open(filepath, 'r') as f:
         for line in f:
             line = line.strip()
             for gesture in GESTURES:
