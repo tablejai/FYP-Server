@@ -18,10 +18,10 @@ class Commander(Node):
         self.subscriber = self.create_subscription(Geasture, '/Geastures', self.callback, 10)
     
     def callback(self, msg):
-        self.send_request(json.loads(msg)["type"])
+        self.send_request(msg.type)
 
     def send_request(self, msg):
-        test_obj = {"abc": msg}
+        send_json = {"command": msg}
         url = f"http://{LOCAL_IP}:{LOCAL_PORT}"
         requests.post(url, json=test_obj)
         
