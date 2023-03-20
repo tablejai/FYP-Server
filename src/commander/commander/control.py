@@ -23,7 +23,8 @@ class Commander(Node):
     def send_request(self, msg):
         send_json = {"command": msg}
         url = f"http://{LOCAL_IP}:{LOCAL_PORT}"
-        requests.post(url, json=test_obj)
+        requests.post(url, json=send_json)
+        print("sent msg")
         
 def main(args=None):
     rclpy.init()
