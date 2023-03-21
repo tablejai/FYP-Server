@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import String
-from msgs.msg import Geasture
+from msgs.msg import Gesture
 import requests
 import json
 
@@ -15,7 +15,7 @@ class Commander(Node):
         super().__init__('Commander')
 
         # Create a subscriber
-        self.subscriber = self.create_subscription(Geasture, '/Geastures', self.callback, 10)
+        self.subscriber = self.create_subscription(Gesture, '/Gestures', self.callback, 10)
     
     def callback(self, msg):
         self.send_request(msg.type)
