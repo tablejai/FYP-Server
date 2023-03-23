@@ -4,7 +4,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 from sensor_msgs.msg import Imu
 from tf2_msgs.msg import TFMessage
-from msgs.msg import Geasture
+from msgs.msg import Gesture
 
 from message_filters import Subscriber, TimeSynchronizer
 from utils.tf_subscriber import TfSubscriber
@@ -34,7 +34,7 @@ class Detector(Node):
         self.syncer.registerCallback(self.sync_callback)
 
         # create a publisher
-        self.command_publisher = self.create_publisher(Geasture, '/Geastures', 10)
+        self.command_publisher = self.create_publisher(Gesture, '/Gestures', 10)
 
         # create a timer to do inferencing
         infer_interval = 0.5
@@ -61,7 +61,7 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_10-11_22-acc0.94")
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_18-1_40-acc1.00.h5")
         self.DATA_BUF_LEN = 100
         self.get_logger().info("model loaded")
 
@@ -110,14 +110,14 @@ class Detector(Node):
 
         # publish command
         gestures = {
-            Geasture.STATIC: Geasture(type=Geasture.STATIC),
-            Geasture.SLIDE_UP: Geasture(type=Geasture.SLIDE_UP),
-            Geasture.SLIDE_DOWN: Geasture(type=Geasture.SLIDE_DOWN),
-            Geasture.SLIDE_LEFT: Geasture(type=Geasture.SLIDE_LEFT),
-            Geasture.SLIDE_RIGHT: Geasture(type=Geasture.SLIDE_RIGHT),
-            Geasture.RELEASE: Geasture(type=Geasture.RELEASE),
-            Geasture.GRASP: Geasture(type=Geasture.GRASP),
-            Geasture.NONE: Geasture(type=Geasture.NONE)
+            Gesture.STATIC: Gesture(type=Gesture.STATIC),
+            Gesture.SLIDE_UP: Gesture(type=Gesture.SLIDE_UP),
+            Gesture.SLIDE_DOWN: Gesture(type=Gesture.SLIDE_DOWN),
+            Gesture.SLIDE_LEFT: Gesture(type=Gesture.SLIDE_LEFT),
+            Gesture.SLIDE_RIGHT: Gesture(type=Gesture.SLIDE_RIGHT),
+            Gesture.RELEASE: Gesture(type=Gesture.RELEASE),
+            Gesture.GRASP: Gesture(type=Gesture.GRASP),
+            Gesture.NONE: Gesture(type=Gesture.NONE)
         }
         gesture = gestures.get(y_label)
         if gesture and probability > 0.98:

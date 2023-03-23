@@ -3,7 +3,7 @@ from rclpy.node import Node
 
 from datetime import datetime, timedelta
 from std_msgs.msg import String
-from msgs.msg import Geasture
+from msgs.msg import Gesture
 import requests
 import json
 LOCAL_IP = "10.89.10.144"
@@ -17,7 +17,7 @@ class Commander(Node):
         super().__init__('Commander')
         # Create a subscriber
         self.url = f"http://{LOCAL_IP}:{LOCAL_PORT}"
-        self.subscriber = self.create_subscription(Geasture, '/Geastures', self.callback, 10)
+        self.subscriber = self.create_subscription(Gesture, '/Gestures', self.callback, 10)
         command_state_init_time = datetime.now() - timedelta(seconds= 1)
         self.command_states = {command: command_state_init_time for command in command_list}
     
