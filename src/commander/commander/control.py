@@ -28,7 +28,8 @@ class Commander(Node):
         self.command_ctrl_flow(msg.type)
     
     def orientation_callback(self, msg):
-        self.get_logger().info(f"command received: {msg.data}")
+        # self.get_logger().info(f"command received: {msg.data}")
+        pass
         
     def command_ctrl_flow(self, command):
         print(self.command_states)
