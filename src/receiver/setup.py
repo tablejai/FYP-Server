@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'receiver=receiver.main:main'
+            'receiver=receiver.receive:main'
         ],
     },
 )

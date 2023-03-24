@@ -6,7 +6,7 @@ from flask import Flask, request
 import json
 
 from std_msgs.msg import Header
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import MagneticField
 from geometry_msgs.msg import Vector3
@@ -28,11 +28,12 @@ class RawPublisherMaster(Node):
 
         self.imu_publishers_ = []
         self.mag_publishers_ = []
+        self.orientation_publisher = self.create_publisher(Float32, '/Orientation', 10)
         for i in range(IMU_NODE_NUM):
             self.imu_publishers_.append(self.create_publisher(Imu, '/Imu'+str(i)+'/Raw', 10))
             self.mag_publishers_.append(self.create_publisher(MagneticField, '/Imu'+str(i)+'/Mag', 10))
 
-    def publish_data(self, data):
+    def publish_imu_data(self, data):
         for i in range(IMU_NODE_NUM):
             stamp, imu, magField = data[i]
 
@@ -61,6 +62,10 @@ def publish_imu_data():
             sec, nsec = t_ // 10**9, t_ % 10**9
         else:
             sec, nsec = int(content['t_sec']), int(content['t_nanosec'])
+        
+        orientation = Float32(data=float(content["orientation"]))
+        publisherMaster.orientation_publisher.publish(orientation)
+        
         for i in range(IMU_NODE_NUM):
             imu_raw = content["imu"+str(i)]
             accel = Vector3(x=float(imu_raw['ax']), y=float(imu_raw['ay']), z=float(imu_raw['az']))
@@ -73,7 +78,7 @@ def publish_imu_data():
             magField = MagneticField(header=header, magnetic_field=mag)
             data.append((stamp, imu, magField))
 
-        publisherMaster.publish_data(data)
+        publisherMaster.publish_imu_data(data)
         return "0"
 
     except json.JSONDecodeError as e:
