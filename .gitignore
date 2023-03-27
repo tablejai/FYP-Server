@@ -3,5 +3,4 @@ log
 install
 __pycache__
 rosbag/
-!rosbag/bag/info.txt
 weights/

@@ -21,7 +21,7 @@ colors_palette = {
     "NONE": "#3288bd",
 }
 
-def load_data(filepath='/home/ubuntu/FYP-ROS/rosbag/bag/info.txt'):
+def load_data(filepath='/home/ubuntu/FYP-ROS/rosbag/metadata.txt'):
     dataset = {}
     with open(filepath, 'r') as f:
         for line in f:
