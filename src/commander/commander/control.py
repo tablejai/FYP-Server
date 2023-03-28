@@ -24,7 +24,7 @@ class Commander(Node):
         self.command_states = {command: command_state_init_time for command in command_list}
     
     def gesture_callback(self, msg):
-        print(f"command received: {msg.type}")
+        # print(f"command received: {msg.type}")
         self.command_ctrl_flow(msg.type)
     
     def orientation_callback(self, msg):
@@ -32,7 +32,7 @@ class Commander(Node):
         pass
         
     def command_ctrl_flow(self, command):
-        print(self.command_states)
+        # print(self.command_states)
         cur_command = command_list[command]
         if datetime.now() - self.command_states[cur_command] > timedelta(seconds=2):
             json_to_sent = {"command": command}
