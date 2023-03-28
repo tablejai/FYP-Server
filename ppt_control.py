@@ -12,15 +12,15 @@ ppt_command_map = [
     "down",  # "SLIDE_DOWN",
     "left",  # "SLIDE_LEFT",
     "right",  # "SLIDE_RIGHT",
-    "b",  # "ZOOM_IN" ,
-    "w",  # "ZOOM_OUT",
+    "w",  # "Release" ,
+    "b",  # "Grasp",
     "option",  # "HIGHLIGHT",
     "option",  # "ON_YES",
     "option",  # "OFF_NO",
     "option",  # "END",
 ]
 
-ppt_dim = True
+ppt_dim = False
 
 def ppt_control_state(command):
     global ppt_dim
