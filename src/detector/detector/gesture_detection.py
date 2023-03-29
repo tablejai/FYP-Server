@@ -47,21 +47,21 @@ class Detector(Node):
         self.data_queue = pd.DataFrame(
             columns=[
                 f"{self.imu_list[0]}_linear_accleration_x", f"{self.imu_list[0]}_linear_accleration_y", f"{self.imu_list[0]}_linear_accleration_z",
-                f"{self.imu_list[0]}_angular_velocity_x", f"{self.imu_list[0]}_angular_velocity_y", f"{self.imu_list[0]}_angular_velocity_z",
-                f"{self.imu_list[0]}_orientation_x", f"{self.imu_list[0]}_orientation_y", f"{self.imu_list[0]}_orientation_z", f"{self.imu_list[0]}_orientation_w",
+                # f"{self.imu_list[0]}_angular_velocity_x", f"{self.imu_list[0]}_angular_velocity_y", f"{self.imu_list[0]}_angular_velocity_z",
+                # f"{self.imu_list[0]}_orientation_x", f"{self.imu_list[0]}_orientation_y", f"{self.imu_list[0]}_orientation_z", f"{self.imu_list[0]}_orientation_w",
                 f"{self.imu_list[1]}_linear_accleration_x", f"{self.imu_list[1]}_linear_accleration_y", f"{self.imu_list[1]}_linear_accleration_z",
-                f"{self.imu_list[1]}_angular_velocity_x", f"{self.imu_list[1]}_angular_velocity_y", f"{self.imu_list[1]}_angular_velocity_z",
-                f"{self.imu_list[1]}_orientation_x", f"{self.imu_list[1]}_orientation_y", f"{self.imu_list[1]}_orientation_z", f"{self.imu_list[1]}_orientation_w",
+                # f"{self.imu_list[1]}_angular_velocity_x", f"{self.imu_list[1]}_angular_velocity_y", f"{self.imu_list[1]}_angular_velocity_z",
+                # f"{self.imu_list[1]}_orientation_x", f"{self.imu_list[1]}_orientation_y", f"{self.imu_list[1]}_orientation_z", f"{self.imu_list[1]}_orientation_w",
                 f"{self.imu_list[2]}_linear_accleration_x", f"{self.imu_list[2]}_linear_accleration_y", f"{self.imu_list[2]}_linear_accleration_z",
-                f"{self.imu_list[2]}_angular_velocity_x", f"{self.imu_list[2]}_angular_velocity_y", f"{self.imu_list[2]}_angular_velocity_z", 
-                f"{self.imu_list[2]}_orientation_x", f"{self.imu_list[2]}_orientation_y", f"{self.imu_list[2]}_orientation_z", f"{self.imu_list[2]}_orientation_w",
-                f"{self.tf_list[0]}_translation_x", f"{self.tf_list[0]}_translation_y", f"{self.tf_list[0]}_translation_z", 
-                f"{self.tf_list[1]}_translation_x", f"{self.tf_list[1]}_translation_y", f"{self.tf_list[1]}_translation_z",
+                # f"{self.imu_list[2]}_angular_velocity_x", f"{self.imu_list[2]}_angular_velocity_y", f"{self.imu_list[2]}_angular_velocity_z", 
+                # f"{self.imu_list[2]}_orientation_x", f"{self.imu_list[2]}_orientation_y", f"{self.imu_list[2]}_orientation_z", f"{self.imu_list[2]}_orientation_w",
+                # f"{self.tf_list[0]}_translation_x", f"{self.tf_list[0]}_translation_y", f"{self.tf_list[0]}_translation_z", 
+                # f"{self.tf_list[1]}_translation_x", f"{self.tf_list[1]}_translation_y", f"{self.tf_list[1]}_translation_z",
             ]
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_18-1_40-acc1.00.h5")
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_29-14_19-acc0.99.h5")
         self.DATA_BUF_LEN = 100
         self.get_logger().info("model loaded")
 
@@ -73,18 +73,18 @@ class Detector(Node):
                 d[f"{self.imu_list[imu_num]}_linear_accleration_x"] = [msg.linear_acceleration.x]
                 d[f"{self.imu_list[imu_num]}_linear_accleration_y"] = [msg.linear_acceleration.y]
                 d[f"{self.imu_list[imu_num]}_linear_accleration_z"] = [msg.linear_acceleration.z]
-                d[f"{self.imu_list[imu_num]}_angular_velocity_x"] = [msg.angular_velocity.x]
-                d[f"{self.imu_list[imu_num]}_angular_velocity_y"] = [msg.angular_velocity.y]
-                d[f"{self.imu_list[imu_num]}_angular_velocity_z"] = [msg.angular_velocity.z]
-                d[f"{self.imu_list[imu_num]}_orientation_x"] = [msg.orientation.x]
-                d[f"{self.imu_list[imu_num]}_orientation_y"] = [msg.orientation.y]
-                d[f"{self.imu_list[imu_num]}_orientation_z"] = [msg.orientation.z]
-                d[f"{self.imu_list[imu_num]}_orientation_w"] = [msg.orientation.w]
+                # d[f"{self.imu_list[imu_num]}_angular_velocity_x"] = [msg.angular_velocity.x]
+                # d[f"{self.imu_list[imu_num]}_angular_velocity_y"] = [msg.angular_velocity.y]
+                # d[f"{self.imu_list[imu_num]}_angular_velocity_z"] = [msg.angular_velocity.z]
+                # d[f"{self.imu_list[imu_num]}_orientation_x"] = [msg.orientation.x]
+                # d[f"{self.imu_list[imu_num]}_orientation_y"] = [msg.orientation.y]
+                # d[f"{self.imu_list[imu_num]}_orientation_z"] = [msg.orientation.z]
+                # d[f"{self.imu_list[imu_num]}_orientation_w"] = [msg.orientation.w]
             elif i < len(self.imu_list) + len(self.tf_list):
                 tf_num = i - len(self.imu_list)
-                d[f"{self.tf_list[tf_num]}_translation_x"] = [msg.transform.translation.x]
-                d[f"{self.tf_list[tf_num]}_translation_y"] = [msg.transform.translation.y]
-                d[f"{self.tf_list[tf_num]}_translation_z"] = [msg.transform.translation.z]
+                # d[f"{self.tf_list[tf_num]}_translation_x"] = [msg.transform.translation.x]
+                # d[f"{self.tf_list[tf_num]}_translation_y"] = [msg.transform.translation.y]
+                # d[f"{self.tf_list[tf_num]}_translation_z"] = [msg.transform.translation.z]
 
         self.data_queue = pd.concat([self.data_queue, pd.DataFrame(data=d)], ignore_index=True)
 
@@ -105,7 +105,7 @@ class Detector(Node):
         y_pred = self.model.predict(np.expand_dims(X, axis=0))
         y_label = np.argmax(y_pred, axis=1)[0]
         probability = np.max(y_pred, axis=1)[0]
-        self.get_logger().info(f"{y_pred=}")
+        # self.get_logger().info(f"{y_pred=}")
         self.get_logger().info(f"prediction: {y_label} (probability: {np.max(y_pred, axis=1)[0]})")
 
         # publish command
@@ -129,26 +129,30 @@ class Detector(Node):
             self.data_queue = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
     def plot_buffer(self):
-        X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:].to_numpy()
+        X = self.data_queue.iloc[-1 * self.DATA_BUF_LEN:]
 
         fig = plt.figure(1)
         fig.clf()
 
         plt.subplot(3, 1, 1)
-        plt.plot(X[:, 1], 'r')
-        plt.xlabel('Linear Acceleration X')
+        plt.plot(X["Imu0_linear_accleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+        plt.ylabel("Imu0")
 
         plt.subplot(3, 1, 2)
-        plt.plot(X[:, 2], 'r')
-        plt.xlabel('Linear Acceleration X')
+        plt.plot(X["Imu1_linear_accleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+        plt.ylabel("Imu1")
 
         plt.subplot(3, 1, 3)
-        plt.plot(X[:, 3], 'r')
-        plt.xlabel('Linear Acceleration X')
+        plt.plot(X["Imu2_linear_accleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
+        plt.ylabel("Imu2")
 
+        plt.plot([], [], ' ', label="x:sample")
+        plt.plot([], [], ' ', label="y:m/s^2")
+        fig.legend()
+        
         plt.draw()
         plt.pause(0.00000000001)
         
