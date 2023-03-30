@@ -61,8 +61,8 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_29-14_19-acc0.99.h5")
-        self.DATA_BUF_LEN = 100
+        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_30-14_35-acc1.00.h5")
+        self.DATA_BUF_LEN = 50
         self.get_logger().info("model loaded")
 
     def sync_callback(self, *msgs):
