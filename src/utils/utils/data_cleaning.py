@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
 file_name = 'rosbag2_2023_02_11-10_27_06'
-df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
+df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{file_name}_data.csv')
 
 gesture_model_file_name = 'rosbag2_2023_02_10-08_20_28'
-df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{gesture_model_file_name}_data.csv')
+df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{gesture_model_file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
@@ -29,6 +29,7 @@ last_text = None
 
 start_index = 0
 end_index = 0
+CROP_LENGTH = 50
 
 last_text = fig.text(.97, .97, f'{start_index}-{end_index}({end_index-start_index})/{len(df)}', fontsize=15, horizontalalignment='right', verticalalignment='top')
 plt.draw()
@@ -50,7 +51,7 @@ def mouse_event(event):
     global start_index
     global end_index
     start_index = max(int(event.xdata), 0)
-    end_index = min(start_index + 100, len(df))
+    end_index = min(start_index + CROP_LENGTH, len(df))
 
     # Remove the last drawn lines
     global last_left_x_grp
@@ -72,7 +73,7 @@ def close_plt_and_save(event):
     global start_index
     global end_index
     # Save the cropped data
-    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{file_name}_data.csv', index=False)
+    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean_50/{file_name}_data.csv', index=False)
     plt.close()
     print("Saved and closed")
 
@@ -100,7 +101,7 @@ for ax, data, data_model, title in zip(vel_axes, vel_data, vel_data_model, vel_t
     ax.set_title(title)
     ax.set_ylim([-5, 5])
 
-if len(df) <= 100:
+if len(df) <= CROP_LENGTH:
     start_index = 0
     end_index = len(df)
     draw_interval(start_index, end_index)
