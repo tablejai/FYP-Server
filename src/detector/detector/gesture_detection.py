@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from tensorflow import keras
 
+model_path = "/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_31-15_34-acc0.99.h5"
 class Detector(Node):
     def __init__(self):
         super().__init__('Detector')
@@ -37,7 +38,7 @@ class Detector(Node):
         self.command_publisher = self.create_publisher(Gesture, '/Gestures', 10)
 
         # create a timer to do inferencing
-        infer_interval = 0.5
+        infer_interval = 0.4
         self.infer_timer = self.create_timer(infer_interval, self.inference)
         self.buf_timer = self.create_timer(10, self.clean_buffer)
         self.plt_timer = self.create_timer(infer_interval, self.plot_buffer)
@@ -61,7 +62,7 @@ class Detector(Node):
         )
     
         # load the pretrain lstm model
-        self.model = keras.models.load_model("/home/ubuntu/FYP-ROS/weights/model_lstm-2023_3_30-14_35-acc1.00.h5")
+        self.model = keras.models.load_model(model_path)
         self.DATA_BUF_LEN = 50
         self.get_logger().info("model loaded")
 
@@ -120,7 +121,7 @@ class Detector(Node):
             Gesture.NONE: Gesture(type=Gesture.NONE)
         }
         gesture = gestures.get(y_label)
-        if gesture and probability > 0.98:
+        if gesture and probability > 0.95:
             self.command_publisher.publish(gesture)
 
     def clean_buffer(self):
