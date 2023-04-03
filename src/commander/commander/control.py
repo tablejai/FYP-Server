@@ -6,7 +6,7 @@ from std_msgs.msg import String, Float32
 from msgs.msg import Gesture
 import requests
 import json
-LOCAL_IP = "192.168.4.2"
+LOCAL_IP = "host.docker.internal"
 LOCAL_PORT = "7000"
 
 command_list = ["STATIC", "SLIDE_UP", "SLIDE_DOWN", "SLIDE_LEFT", "SLIDE_RIGHT", "RELEASE", "GRASP", "HIGHLIGHT","ON_YES","OFF_NO","NONE"]
