@@ -6,7 +6,8 @@ from std_msgs.msg import String, Float32
 from msgs.msg import Gesture
 import requests
 import json
-LOCAL_IP = "192.168.4.2"
+LOCAL_IP = "host.docker.internal"
+LED_IP = "192.168.4.3"
 LOCAL_PORT = "7000"
 
 command_list = ["STATIC", "SLIDE_UP", "SLIDE_DOWN", "SLIDE_LEFT",
@@ -19,6 +20,7 @@ class Commander(Node):
         super().__init__('Commander')
         # Create a subscriber
         self.url = f"http://{LOCAL_IP}:{LOCAL_PORT}"
+        self.led_url = f"http://{LED_IP}"
         self.gestures_subscriber = self.create_subscription(
             Gesture, '/Gestures', self.gesture_callback, 10)
         self.orientation_subscriber = self.create_subscription(
@@ -29,9 +31,12 @@ class Commander(Node):
         command_state_init_time = datetime.now() - timedelta(seconds=1)
         self.command_states = {
             command: command_state_init_time for command in command_list}
+        self.get_logger().info(f"aksdfss")
+
 
     def gesture_callback(self, msg):
-        print(f"command received: {msg.type}")
+        self.get_logger().info(f"command received: {msg.type}")
+        self.get_logger().info(f"{self.face_ppt=}")
         if self.face_ppt is True:
             self.ppt_ctrl_flow(msg.type)
         elif self.face_ppt is False:
@@ -39,7 +44,9 @@ class Commander(Node):
 
     def orientation_callback(self, msg):
         # TODO: See how to get the proper angle
-        angle = msg.angle
+        # self.get_logger().info(f"{self.init_angle=}")
+        # self.get_logger().info(f"{msg.data=}")
+        angle = int(msg.data)
         if self.init_angle is None:
             self.init_angle = angle
             if self.init_angle >= 90 and self.init_angle <= 270:
@@ -78,10 +85,10 @@ class Commander(Node):
     def led_ctrl_flow(self, command):
         print(self.command_states)
         cur_command = command_list[command]
-        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=2):
+        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=1.3):
             if cur_command == "RELEASE" or cur_command == "GRASP":
                 requests.get(
-                    self.url, params="ON" if cur_command == "RELEASE" else "OFF")
+                    self.led_url, params="ON" if cur_command == "RELEASE" else "OFF")
             self.command_states[cur_command] = datetime.now()
 
 
