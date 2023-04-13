@@ -52,9 +52,9 @@ class Labeler(Node):
         self.data = {}
         self.data["timestamp"] = []
         for imu in self.imu_list:
-            self.data[f"{imu}_linear_accleration_x"] = []
-            self.data[f"{imu}_linear_accleration_y"] = []
-            self.data[f"{imu}_linear_accleration_z"] = []
+            self.data[f"{imu}_linear_acceleration_x"] = []
+            self.data[f"{imu}_linear_acceleration_y"] = []
+            self.data[f"{imu}_linear_acceleration_z"] = []
             self.data[f"{imu}_angular_velocity_x"] = []
             self.data[f"{imu}_angular_velocity_y"] = []
             self.data[f"{imu}_angular_velocity_z"] = []
@@ -104,9 +104,9 @@ class Labeler(Node):
     def sync_callback(self, msg0, msg1, msg2, msg3, msg4):
         self.data[f"timestamp"].append(msg0.header.stamp.sec + msg0.header.stamp.nanosec*1e-9)
         for imu, msg in zip(self.imu_list, [msg0, msg1, msg2]):
-            self.data[f"{imu}_linear_accleration_x"].append(msg.linear_acceleration.x)
-            self.data[f"{imu}_linear_accleration_y"].append(msg.linear_acceleration.y)
-            self.data[f"{imu}_linear_accleration_z"].append(msg.linear_acceleration.z)
+            self.data[f"{imu}_linear_acceleration_x"].append(msg.linear_acceleration.x)
+            self.data[f"{imu}_linear_acceleration_y"].append(msg.linear_acceleration.y)
+            self.data[f"{imu}_linear_acceleration_z"].append(msg.linear_acceleration.z)
             self.data[f"{imu}_angular_velocity_x"].append(msg.angular_velocity.x)
             self.data[f"{imu}_angular_velocity_y"].append(msg.angular_velocity.y)
             self.data[f"{imu}_angular_velocity_z"].append(msg.angular_velocity.z)

@@ -47,13 +47,13 @@ class Detector(Node):
         # create buffer
         self.data_queue = pd.DataFrame(
             columns=[
-                f"{self.imu_list[0]}_linear_accleration_x", f"{self.imu_list[0]}_linear_accleration_y", f"{self.imu_list[0]}_linear_accleration_z",
+                f"{self.imu_list[0]}_linear_acceleration_x", f"{self.imu_list[0]}_linear_acceleration_y", f"{self.imu_list[0]}_linear_acceleration_z",
                 # f"{self.imu_list[0]}_angular_velocity_x", f"{self.imu_list[0]}_angular_velocity_y", f"{self.imu_list[0]}_angular_velocity_z",
                 # f"{self.imu_list[0]}_orientation_x", f"{self.imu_list[0]}_orientation_y", f"{self.imu_list[0]}_orientation_z", f"{self.imu_list[0]}_orientation_w",
-                f"{self.imu_list[1]}_linear_accleration_x", f"{self.imu_list[1]}_linear_accleration_y", f"{self.imu_list[1]}_linear_accleration_z",
+                f"{self.imu_list[1]}_linear_acceleration_x", f"{self.imu_list[1]}_linear_acceleration_y", f"{self.imu_list[1]}_linear_acceleration_z",
                 # f"{self.imu_list[1]}_angular_velocity_x", f"{self.imu_list[1]}_angular_velocity_y", f"{self.imu_list[1]}_angular_velocity_z",
                 # f"{self.imu_list[1]}_orientation_x", f"{self.imu_list[1]}_orientation_y", f"{self.imu_list[1]}_orientation_z", f"{self.imu_list[1]}_orientation_w",
-                f"{self.imu_list[2]}_linear_accleration_x", f"{self.imu_list[2]}_linear_accleration_y", f"{self.imu_list[2]}_linear_accleration_z",
+                f"{self.imu_list[2]}_linear_acceleration_x", f"{self.imu_list[2]}_linear_acceleration_y", f"{self.imu_list[2]}_linear_acceleration_z",
                 # f"{self.imu_list[2]}_angular_velocity_x", f"{self.imu_list[2]}_angular_velocity_y", f"{self.imu_list[2]}_angular_velocity_z", 
                 # f"{self.imu_list[2]}_orientation_x", f"{self.imu_list[2]}_orientation_y", f"{self.imu_list[2]}_orientation_z", f"{self.imu_list[2]}_orientation_w",
                 # f"{self.tf_list[0]}_translation_x", f"{self.tf_list[0]}_translation_y", f"{self.tf_list[0]}_translation_z", 
@@ -71,9 +71,9 @@ class Detector(Node):
         for i, msg in enumerate(msgs):
             if i < len(self.imu_list):
                 imu_num = i
-                d[f"{self.imu_list[imu_num]}_linear_accleration_x"] = [msg.linear_acceleration.x]
-                d[f"{self.imu_list[imu_num]}_linear_accleration_y"] = [msg.linear_acceleration.y]
-                d[f"{self.imu_list[imu_num]}_linear_accleration_z"] = [msg.linear_acceleration.z]
+                d[f"{self.imu_list[imu_num]}_linear_acceleration_x"] = [msg.linear_acceleration.x]
+                d[f"{self.imu_list[imu_num]}_linear_acceleration_y"] = [msg.linear_acceleration.y]
+                d[f"{self.imu_list[imu_num]}_linear_acceleration_z"] = [msg.linear_acceleration.z]
                 # d[f"{self.imu_list[imu_num]}_angular_velocity_x"] = [msg.angular_velocity.x]
                 # d[f"{self.imu_list[imu_num]}_angular_velocity_y"] = [msg.angular_velocity.y]
                 # d[f"{self.imu_list[imu_num]}_angular_velocity_z"] = [msg.angular_velocity.z]
@@ -136,17 +136,17 @@ class Detector(Node):
         fig.clf()
 
         plt.subplot(3, 1, 1)
-        plt.plot(X["Imu0_linear_accleration_x"], 'r')
+        plt.plot(X["Imu0_linear_acceleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
         plt.ylabel("Imu0")
 
         plt.subplot(3, 1, 2)
-        plt.plot(X["Imu1_linear_accleration_x"], 'r')
+        plt.plot(X["Imu1_linear_acceleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
         plt.ylabel("Imu1")
 
         plt.subplot(3, 1, 3)
-        plt.plot(X["Imu2_linear_accleration_x"], 'r')
+        plt.plot(X["Imu2_linear_acceleration_x"], 'r')
         plt.ylim(-1.5 * 9.8, 1.5 * 9.8)
         plt.ylabel("Imu2")
 

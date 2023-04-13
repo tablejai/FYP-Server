@@ -40,7 +40,7 @@ if __name__ == '__main__':
         
         acc_axes = axs[:, :3].ravel()
         vel_axes = axs[:, 3:].ravel()
-        acc_data = [raw_data[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+        acc_data = [raw_data[f'Imu{i}_linear_acceleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
         vel_data = [raw_data[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
         acc_titles = [f'Imu{i}_acc_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
         vel_titles = [f'Imu{i}_vel_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]

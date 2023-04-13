@@ -13,9 +13,9 @@ df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{ge
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
 acc_axes = axs[:, :3].ravel()
 vel_axes = axs[:, 3:].ravel()
-acc_data = [df[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+acc_data = [df[f'Imu{i}_linear_acceleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_data = [df[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
-acc_data_model = [df_gesture_model[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+acc_data_model = [df_gesture_model[f'Imu{i}_linear_acceleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_data_model = [df_gesture_model[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 acc_titles = [f'Imu{i}_acc_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_titles = [f'Imu{i}_vel_{xyz}' for i in range(3) for xyz in ['x', 'y', 'z']]

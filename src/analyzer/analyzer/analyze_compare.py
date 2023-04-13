@@ -31,7 +31,7 @@ file_path1 = target_data[0]
 raw_data1 = pd.read_csv(f'./rosbag/data/data_clean/{file_path1}_data.csv')
 raw_data1['timestamp'] = raw_data1['timestamp'] - raw_data1['timestamp'][0]
 
-acc_data1 = [raw_data1[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+acc_data1 = [raw_data1[f'Imu{i}_linear_acceleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 vel_data1 = [raw_data1[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 
 plot_data(acc_axes, acc_data1, acc_titles, 'green')
@@ -66,7 +66,7 @@ def switch_plot(event):
     raw_data2 = pd.read_csv(f'./rosbag/data/data_clean/{file_path2}_data.csv')
     raw_data2['timestamp'] = raw_data2['timestamp'] - raw_data2['timestamp'][0]
 
-    acc_data2 = [raw_data2[f'Imu{i}_linear_accleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
+    acc_data2 = [raw_data2[f'Imu{i}_linear_acceleration_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
     vel_data2 = [raw_data2[f'Imu{i}_angular_velocity_{xyz}'] for i in range(3) for xyz in ['x', 'y', 'z']]
 
     lines = plot_data(acc_axes, acc_data2, acc_titles, "red", linestyle="dotted")
