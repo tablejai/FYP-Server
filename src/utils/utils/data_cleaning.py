@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
 file_name = 'rosbag2_2023_02_11-10_27_06'
-df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{file_name}_data.csv')
+df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
 
 gesture_model_file_name = 'rosbag2_2023_02_10-08_20_28'
-df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean/{gesture_model_file_name}_data.csv')
+df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{gesture_model_file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
