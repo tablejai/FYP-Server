@@ -7,6 +7,11 @@ def load_data(filepath='/home/ubuntu/FYP-ROS/rosbag/metadata.json', ignore_dates
     :param ignore_dates: list of dates to ignore
     :param ignore_classes: list of classes to ignore
     :return: dataset, count
+
+    :usage: 
+    metadata, count = load_data()
+    for gesture_type in tqdm.tqdm(metadata):
+        for data_id in metadata[gesture_type]:
     '''
     dataset = {}
     count = 0
