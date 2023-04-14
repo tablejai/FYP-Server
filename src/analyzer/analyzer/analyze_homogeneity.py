@@ -2,24 +2,29 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import mplcursors
+import os
+os.sys.path.append('/home/ubuntu/FYP-ROS/src/utils/utils')
+from data_loading import load_data
 import utils
 
 GESTURES = utils.GESTURES
 colors_palette = utils.colors_palette
 target_gesture = GESTURES[1]
 
+SAMPLE_PER_GESTURE = 4
+
 if __name__ == '__main__':
-    dataset = utils.load_data()
+    dataset, cnt = load_data()
     gesture_samples = dataset[target_gesture]
     
     # sample random 10 samples
-    gesture_samples = np.random.choice(gesture_samples, 6)
+    gesture_samples = np.random.choice(gesture_samples, SAMPLE_PER_GESTURE)
 
-    fig, axs = plt.subplots(3, 6, figsize=(20, 10))
+    fig, axs = plt.subplots(3, 6, figsize=(15, 8))
     lines = []
     for i, filename in enumerate(gesture_samples):
         print(f"{filename=}")
-        raw_data = pd.read_csv(f'./rosbag/data/data_clean/{filename}_data.csv')
+        raw_data = pd.read_csv(f'./rosbag/data/data_clean_50/{filename}_data.csv')
         raw_data['timestamp'] = raw_data['timestamp'] - raw_data['timestamp'][0]
         
         acc_axes = axs[:, :3].ravel()
