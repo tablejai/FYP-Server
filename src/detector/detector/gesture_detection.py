@@ -118,7 +118,8 @@ class Detector(Node):
             Gesture.SLIDE_RIGHT: Gesture(type=Gesture.SLIDE_RIGHT),
             Gesture.RELEASE: Gesture(type=Gesture.RELEASE),
             Gesture.GRASP: Gesture(type=Gesture.GRASP),
-            Gesture.NONE: Gesture(type=Gesture.NONE)
+            Gesture.NONE: Gesture(type=Gesture.NONE),
+            Gesture.POINTING: Gesture(type=Gesture.POINTING),
         }
         gesture = gestures.get(y_label)
         if gesture and probability > 0.95:

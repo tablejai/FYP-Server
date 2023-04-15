@@ -5671,6 +5671,248 @@
     "HIGHLIGHT": [],
     "ON_YES": [],
     "OFF_NO": [],
+    "POINTING": [
+        {
+            "date": "Apr 15",
+            "time": "08:39",
+            "data_id": "rosbag2_2023_04_15-08_39_50"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_39_57"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_04"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_14"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_22"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_30"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_42"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_48"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:40",
+            "data_id": "rosbag2_2023_04_15-08_40_54"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_00"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_06"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_11"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_17"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_25"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_32"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_38"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_43"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_48"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:41",
+            "data_id": "rosbag2_2023_04_15-08_41_52"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_00"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_06"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_12"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_17"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_24"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_29"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_35"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_40"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_47"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:42",
+            "data_id": "rosbag2_2023_04_15-08_42_53"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_42_59"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_04"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_14"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_18"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_23"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_29"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_35"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_41"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_49"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:43",
+            "data_id": "rosbag2_2023_04_15-08_43_54"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_43_58"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_10"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_23"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_27"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_32"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_36"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_41"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_47"
+        },
+        {
+            "date": "Apr 15",
+            "time": "08:44",
+            "data_id": "rosbag2_2023_04_15-08_44_54"
+        }
+    ],
     "NONE": [
         {
             "date": "Feb 27",
