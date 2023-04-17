@@ -6,7 +6,7 @@ import pandas as pd
 import os
 from functools import partial
 
-root = tk.Tk("Smart Glove Device Configuration")
+root = tk.Tk()
 root.title("Device Position Confirguration Interface")
 
 dev_button_list = dict()
