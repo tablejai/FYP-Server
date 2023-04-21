@@ -4,7 +4,7 @@
 
 Drawio
 
-![fyp new flow.jpg](./res/fyp_new_flow.jpg)
+![fyp new flow.jpg](./res/fyp_flow.jpg)
 
 Rqt_graph
 
