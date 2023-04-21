@@ -10,7 +10,7 @@ root = tk.Tk()
 root.title("Device Position Confirguration Interface")
 
 dev_button_list = dict()
-CONFIG_FILE_NAME = "dev_config.json"
+CONFIG_FILE_NAME = "/home/ubuntu/FYP-ROS/src/commander/commander/dev_config.json"
 DEFAULT_DEV_NAME = "dev"
 DEVICE_TYPES = ["LED", "PowerPoint"]
 
