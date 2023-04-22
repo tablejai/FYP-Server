@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mplcursors
 import os
-os.sys.path.append('/home/ubuntu/FYP-ROS/src/utils/utils')
+os.sys.path.append('/home/ubuntu/FYP-Glove/src/utils/utils')
 from data_loading import load_data
 import utils
 

@@ -6,7 +6,7 @@
         "limitSymbolsToIncludedHeaders": false
       },
       "includePath": [
-        "/root/FYP-ROS/install/msgs/include/**",
+        "/root/FYP-Glove/install/msgs/include/**",
         "/opt/ros/foxy/include/**",
         "/usr/include/**"
       ],

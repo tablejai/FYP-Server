@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from tensorflow import keras
 
-model_path = "/home/ubuntu/FYP-ROS/weights/model_lstm-2023_4_15-10_9-acc1.00.h5"
+model_path = "/home/ubuntu/FYP-Glove/weights/model_lstm-2023_4_15-10_9-acc1.00.h5"
 class Detector(Node):
     def __init__(self):
         super().__init__('Detector')

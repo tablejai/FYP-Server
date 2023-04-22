@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
 file_name = 'rosbag2_2023_02_11-10_27_06'
-df = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{file_name}_data.csv')
+df = pd.read_csv(f'/home/ubuntu/FYP-Glove/rosbag/data/data/{file_name}_data.csv')
 
 gesture_model_file_name = 'rosbag2_2023_02_10-08_20_28'
-df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data/{gesture_model_file_name}_data.csv')
+df_gesture_model = pd.read_csv(f'/home/ubuntu/FYP-Glove/rosbag/data/data/{gesture_model_file_name}_data.csv')
 
 # Create the figure
 fig, axs = plt.subplots(3, 6, figsize=(20, 10))
@@ -73,7 +73,7 @@ def close_plt_and_save(event):
     global start_index
     global end_index
     # Save the cropped data
-    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-ROS/rosbag/data/data_clean_50/{file_name}_data.csv', index=False)
+    df[start_index:end_index].to_csv(f'/home/ubuntu/FYP-Glove/rosbag/data/data_clean_50/{file_name}_data.csv', index=False)
     plt.close()
     print("Saved and closed")
 

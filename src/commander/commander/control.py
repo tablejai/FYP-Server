@@ -53,7 +53,7 @@ class Commander(Node):
     def load_dev_config(self):
         global dev_config_list
         with open(
-            "/home/ubuntu/FYP-ROS/src/commander/commander/dev_config.json"
+            "/home/ubuntu/FYP-Glove/src/commander/commander/dev_config.json"
         ) as dev_config_file:
             dev_dict = json.load(dev_config_file)
             for dev_item in dev_dict.values():

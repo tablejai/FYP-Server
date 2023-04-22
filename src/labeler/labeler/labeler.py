@@ -21,8 +21,8 @@ class Labeler(Node):
     def __init__(self):
         super().__init__('Labeler')
         self.declare_parameter('bag_name')
-        self.data_path = f"/home/ubuntu/FYP-ROS/rosbag/data/data/{self.get_parameter('bag_name').value}"
-        self.label_path = f"/home/ubuntu/FYP-ROS/rosbag/data/label/{self.get_parameter('bag_name').value}"
+        self.data_path = f"/home/ubuntu/FYP-Glove/rosbag/data/data/{self.get_parameter('bag_name').value}"
+        self.label_path = f"/home/ubuntu/FYP-Glove/rosbag/data/label/{self.get_parameter('bag_name').value}"
         self.get_logger().info(f"data path: {self.data_path}")
         self.get_logger().info(f"label path: {self.label_path}")
 

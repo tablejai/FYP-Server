@@ -1,6 +1,6 @@
 import json
 
-def load_data(filepath='/home/ubuntu/FYP-ROS/rosbag/metadata.json', ignore_dates=[], ignore_classes=[]):
+def load_data(filepath='/home/ubuntu/FYP-Glove/rosbag/metadata.json', ignore_dates=[], ignore_classes=[]):
     '''
     load data from metadata.json
     :param filepath: path to metadata.json

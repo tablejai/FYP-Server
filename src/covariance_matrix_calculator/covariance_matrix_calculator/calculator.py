@@ -15,7 +15,7 @@ import threading
 # files
 import os
 
-BAG_ROOT_PATH = "/home/ubuntu/FYP-ROS/rosbag/bag/"
+BAG_ROOT_PATH = "/home/ubuntu/FYP-Glove/rosbag/bag/"
 
 class Calculator(Node):
     def __init__(self, bag_name):

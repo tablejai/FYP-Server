@@ -49,7 +49,7 @@ sudo bash setup.sh
 source /opt/ros/foxy/setup.sh 
 
 # workspace config, for our own-made packages, such as "receiver", "filter"
-cd ~/FYP-ROS
+cd ~/FYP-Glove
 source install/setup.bash
 ```
 
@@ -222,6 +222,6 @@ rviz2 --display-config src/glove.rviz
 ### Collecting data
 
 ```python
-cd FYP-ROS/rosbag/bag/
+cd FYP-Glove/rosbag/bag/
 ros2 bag record /Imu0 /Imu1 /Imu2 /Imu0/Raw /Imu1/Raw /Imu2/Raw /tf /tf_static
 ```
