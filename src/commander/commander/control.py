@@ -53,7 +53,7 @@ class Commander(Node):
     def load_dev_config(self):
         global dev_config_list
         with open(
-            "/home/ubuntu/FYP-Glove/src/commander/commander/dev_config.json"
+            "/home/ubuntu/FYP-ROS/src/commander/commander/dev_config.json"
         ) as dev_config_file:
             dev_dict = json.load(dev_config_file)
             for dev_item in dev_dict.values():
@@ -65,7 +65,6 @@ class Commander(Node):
                     "upper_bound": float(u_bound),
                     "dev_type": dev_type,
                     "exceed_0": True if float(l_bound) > float(u_bound) else False,
-                    "exceed_360": True if float(l_bound) < float(u_bound) else False,
                     "ip_address": dev_item["ip_address"],
                 }
                 dev_config_list.append(dev_config_obj)
@@ -82,27 +81,29 @@ class Commander(Node):
         send_ip = None
         global dev_config_list
         angle = int(msg.data)
+        self.get_logger().info(f"angle: {angle}")
         for dev in dev_config_list:
             lower_bound = dev["lower_bound"]
             upper_bound = dev["upper_bound"]
             exceed_0 = dev["exceed_0"]
-            exceed_360 = dev["exceed_360"]
-            if not exceed_0 and not exceed_360:
-                if angle >= lower_bound and angle >= upper_bound:
+            self.get_logger().info(
+                f"current dev status: {lower_bound}, {upper_bound}, {exceed_0}"
+            )
+            if not exceed_0:
+                self.get_logger().info(f"Got into not exceed_0")
+                if angle >= lower_bound and angle <= upper_bound:
+                    self.get_logger().info(f"saved ip and break from for loop")
                     send_dev = dev["dev_type"]
                     send_ip = dev["ip_address"]
                     break
-            elif not exceed_0 and exceed_360:
-                if (angle >= lower_bound and angle <= 360) or angle <= lower_bound:
+            elif exceed_0:
+                self.get_logger().info(f"Got into exceed_0")
+                if (angle <= upper_bound and angle >= 0) or angle >= lower_bound:
+                    self.get_logger().info(f"saved ip and break from for loop")
                     send_dev = dev["dev_type"]
                     send_ip = dev["ip_address"]
                     break
-            elif exceed_0 and not exceed_360:
-                if (angle <= upper_bound and angle >= 0) or angle >= upper_bound:
-                    send_dev = dev["dev_type"]
-                    send_ip = dev["ip_address"]
-                    break
-        self.get_logger().info(f"send_dev: {send_dev}")
+        # self.get_logger().info(f"dev_config_list: {dev_config_list}")
         self.get_logger().info(f"device_ip: {send_ip}")
         if send_dev == "Powerpoint":
             self.face_ppt = True
