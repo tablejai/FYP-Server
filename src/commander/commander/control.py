@@ -53,7 +53,7 @@ class Commander(Node):
     def load_dev_config(self):
         global dev_config_list
         with open(
-            "/home/ubuntu/FYP-ROS/src/commander/commander/dev_config.json"
+            "/home/ubuntu/FYP-Glove/src/commander/commander/dev_config.json"
         ) as dev_config_file:
             dev_dict = json.load(dev_config_file)
             for dev_item in dev_dict.values():
@@ -104,6 +104,7 @@ class Commander(Node):
                     send_ip = dev["ip_address"]
                     break
         # self.get_logger().info(f"dev_config_list: {dev_config_list}")
+        self.get_logger().info(f"device_type: {send_dev}")
         self.get_logger().info(f"device_ip: {send_ip}")
         if send_dev == "Powerpoint":
             self.face_ppt = True
@@ -114,14 +115,14 @@ class Commander(Node):
 
     def ppt_ctrl_flow(self, command):
         cur_command = command_list[command]
-        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=2):
+        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=1):
             json_to_sent = {"command": command}
             requests.post(self.url.format(self.send_ip), json=json_to_sent)
             self.command_states[cur_command] = datetime.now()
 
     def led_ctrl_flow(self, command):
         cur_command = command_list[command]
-        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=1.3):
+        if datetime.now() - self.command_states[cur_command] > timedelta(seconds=1):
             if cur_command == "RELEASE" or cur_command == "GRASP":
                 requests.get(
                     self.led_url.format(self.send_ip),

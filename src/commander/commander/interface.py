@@ -197,9 +197,11 @@ class InterfaceCanvas():
 
     def load_dev_json(self):
         global dev_button_list
-        files = os.listdir()
-        if CONFIG_FILE_NAME not in files:
-            return
+        # files = os.listdir()
+        # if CONFIG_FILE_NAME not in files:
+        #     print("config file not found")
+        #     return
+
         with open(CONFIG_FILE_NAME) as fp:
             dev_button_list = json.load(fp)
         self.refresh_dev_bt_pos()
