@@ -204,7 +204,7 @@ class InterfaceCanvas():
 
         with open(CONFIG_FILE_NAME) as fp:
             dev_button_list = json.load(fp)
-        self.refresh_dev_bt_pos()
+        self.refresh_dev_bt_pos(auto_gen=False)
 
 
 if __name__ == "__main__":

@@ -48,7 +48,6 @@ class Commander(Node):
         self.command_states = {
             command: command_state_init_time for command in command_list
         }
-        self.get_logger().info(f"aksdfss")
 
     def load_dev_config(self):
         global dev_config_list
@@ -81,29 +80,24 @@ class Commander(Node):
         send_ip = None
         global dev_config_list
         angle = int(msg.data)
-        self.get_logger().info(f"angle: {angle}")
+        # self.get_logger().info(f"angle: {angle}")
         for dev in dev_config_list:
             lower_bound = dev["lower_bound"]
             upper_bound = dev["upper_bound"]
             exceed_0 = dev["exceed_0"]
-            self.get_logger().info(
-                f"current dev status: {lower_bound}, {upper_bound}, {exceed_0}"
-            )
+            # self.get_logger().info(
+            #     f"current dev status: {lower_bound}, {upper_bound}, {exceed_0}"
+            # )
             if not exceed_0:
-                self.get_logger().info(f"Got into not exceed_0")
                 if angle >= lower_bound and angle <= upper_bound:
-                    self.get_logger().info(f"saved ip and break from for loop")
                     send_dev = dev["dev_type"]
                     send_ip = dev["ip_address"]
                     break
             elif exceed_0:
-                self.get_logger().info(f"Got into exceed_0")
                 if (angle <= upper_bound and angle >= 0) or angle >= lower_bound:
-                    self.get_logger().info(f"saved ip and break from for loop")
                     send_dev = dev["dev_type"]
                     send_ip = dev["ip_address"]
                     break
-        # self.get_logger().info(f"dev_config_list: {dev_config_list}")
         self.get_logger().info(f"device_type: {send_dev}")
         self.get_logger().info(f"device_ip: {send_ip}")
         if send_dev == "Powerpoint":
@@ -125,8 +119,8 @@ class Commander(Node):
         if datetime.now() - self.command_states[cur_command] > timedelta(seconds=1):
             if cur_command == "RELEASE" or cur_command == "GRASP":
                 requests.get(
-                    self.led_url.format(self.send_ip),
-                    params="ON" if cur_command == "RELEASE" else "OFF",
+                    self.led_url.format(self.send_ip) + ("/led_on" if cur_command == "RELEASE" else "/led_off"),
+                    params="LED_ON" if cur_command == "RELEASE" else "LED_OFF",
                 )
             self.command_states[cur_command] = datetime.now()
 
