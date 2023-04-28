@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from tensorflow import keras
 
-model_path = "/home/ubuntu/FYP-Glove/weights/model_lstm-2023_4_15-10_9-acc1.00.h5"
+model_path = "/home/ubuntu/FYP-Glove/weights/model_lstm-2023_4_7-9_5-acc1.00.h5"
 class Detector(Node):
     def __init__(self):
         super().__init__('Detector')
@@ -122,7 +122,7 @@ class Detector(Node):
             Gesture.POINTING: Gesture(type=Gesture.POINTING),
         }
         gesture = gestures.get(y_label)
-        if gesture and probability > 0.95:
+        if gesture and probability > 0.9:
             self.command_publisher.publish(gesture)
 
     def clean_buffer(self):

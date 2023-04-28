@@ -100,7 +100,7 @@ class Commander(Node):
                     break
         self.get_logger().info(f"device_type: {send_dev}")
         self.get_logger().info(f"device_ip: {send_ip}")
-        if send_dev == "Powerpoint":
+        if send_dev == "PowerPoint":
             self.face_ppt = True
             self.send_ip = send_ip
         else:

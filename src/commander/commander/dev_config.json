@@ -3,7 +3,7 @@
         "lower_bound": "0",
         "upper_bound": "179",
         "device_type": "PowerPoint",
-        "ip_address": "192.168.4.2"
+        "ip_address": "host.docker.internal"
     },
     "led1": {
         "lower_bound": "181.0",
