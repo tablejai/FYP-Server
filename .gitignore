@@ -4,3 +4,4 @@ install
 __pycache__
 rosbag/
 weights/
+.DS_Store
